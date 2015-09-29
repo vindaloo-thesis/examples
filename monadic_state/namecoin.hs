@@ -13,9 +13,9 @@ register key val = do st <- S.get
                                                    return True
 
 
-get :: (Public a, Public b) => a -> S.State DB b
+get :: (Public a) => a -> S.State DB EVMVarT
 get key = do st <- S.get
              case (M.lookup (expose key) st) of
                Just x -> return x
-               Nothing -> undefined
+               Nothing -> return $ Int8 1
 
