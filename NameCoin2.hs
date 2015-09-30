@@ -44,9 +44,9 @@ get1 key = gets $ fromMaybe 0 . M.lookup key
 
 {- VERSION 2:
 This uses the function 'ifState', to allow the use of conditionals
-on the state in a more functional way. 'ifState' would be part of the
-standard library. It *could* even be sugared away, to look something
-like the code in version 3.
+on the state in a more functional way. 'ifState', or something similar,
+would be part of the standard library. It *could* even be sugared away,
+to look something like the code in version 3.
 -}
 
 register2 :: Word32 -> Word32 -> Ethereum NameReg Bool
