@@ -56,9 +56,9 @@ finalize = do
     c2 <- open (commitment p2)
     put []
     case winner c1 c2 of
-        First  -> send (address p1) balance
-        Second -> send (address p2) balance
-        Tie    -> send (address p1) (balance/2) >> send (address p2) (balance/2)
+      First  -> send (address p1) balance
+      Second -> send (address p2) balance
+      Tie    -> send (address p1) (balance/2) >> send (address p2) (balance/2)
 
 {-
 General remark:
