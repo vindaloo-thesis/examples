@@ -60,4 +60,11 @@ finalize = do
         Second -> send (address p2) balance
         Tie    -> send (address p1) (balance/2) >> send (address p2) (balance/2)
 
+{-
+General remark:
 
+We are updating the state quite explicitly above (see lines 42 and 57).
+A better idea might be to define a per-participant state, with special syntax
+to update it. The compiler would take care of mapping addresses to their states.
+This will have to be explored in later experiments though.
+-}
