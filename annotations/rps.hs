@@ -11,7 +11,7 @@ data Result = First | Second | Tie
 data PlayerData = PlayerData { address    :: Address
                              , commitment :: Commit Choice }
 
-type GameState = (PlayerData,PlayerData)
+type GameState = [PlayerData]
 
 -- This is a library function for the Ethereum monad. Not sure how
 -- to implement it.
@@ -34,9 +34,12 @@ winner _        _        = Second
 
 {- The syntax below is probably not the best way to solve this, but it
 basically means that the max number of participants is 2, and that
-this function will add 1 to the number of participants iff it succeeds. -}
+this function will add 1 to the number of participants iff it succeeds.
+
+If a call is not valid due to the number of participants, all ether is
+be returned to the sender. -}
 playerChoice (2,1) :: Commit Choice -> Ethereum GameState ()
-playerChoice c = modify $ insert sender c
+playerChoice c = modify (PlayerData sender c:)
 
 
 
@@ -48,9 +51,10 @@ already have 2 participants? In this case it is enforced by the calls to
 'open', but this can not be expected in the general case. -}
 finalize (2,-2) :: Ethereum GameState ()
 finalize = do
-    (p1,p2) <- get
+    GameState p1 p2 <- gets
     c1 <- open (commitment p1)
     c2 <- open (commitment p2)
+    put []
     case winner c1 c2 of
         First  -> send (address p1) balance
         Second -> send (address p2) balance
