@@ -64,7 +64,7 @@ finalize = do
 General remark:
 
 We are updating the state quite explicitly above (see lines 42 and 57).
-A better idea might be to define a per-participant state, with special syntax
+A better idea might be to define a per-participant state, with special functions
 to update it. The compiler would take care of mapping addresses to their states.
 This will have to be explored in later experiments though.
 -}
