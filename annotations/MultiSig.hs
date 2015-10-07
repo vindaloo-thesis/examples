@@ -47,7 +47,7 @@ sign = S.modify $ \s -> s{ transaction = addSigner (transaction s) } -- we reeee
 
 finalize (minSigners,-minSigners) :: Ethereum TxState ()
 finalize = do
-    tx <- S.gets transaction      -- this is bad syntax imo. state is so central to contracts, so it should be accessible (for reading, not writing!) directly from all stateful functions
+    let Just tx = transaction state -- this is bad syntax imo. state is so central to contracts, so its components should be directly accessible (for reading, not writing!) from all stateful functions
     send (to tx) (amount tx)
     modify (\s -> s{transaction = Nothing})
 

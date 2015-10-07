@@ -51,7 +51,7 @@ already have 2 participants? In this case it is enforced by the calls to
 'open', but this can not be expected in the general case. -}
 finalize (2,-2) :: Ethereum GameState ()
 finalize = do
-    p1:p2:_ <- get
+    let p1:p2:_ = state
     c1 <- open (commitment p1)
     c2 <- open (commitment p2)
     put []
