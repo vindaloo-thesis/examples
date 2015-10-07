@@ -17,4 +17,4 @@ register key val | key `member` state = fail "Existing key"
 
 
 get (1,()) :: Word32 -> Ethereum Registry Word32
-get key = S.gets $ May.fromMaybe 0 . M.lookup key
+get key = May.fromMaybe 0 (M.lookup key state)
