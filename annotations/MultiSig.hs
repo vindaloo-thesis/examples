@@ -1,8 +1,9 @@
 -- I think lots of problems surfaced here... Will comment in more detail later.
 
 contract MultiSig
-( createTx
-, newTransaction ) where
+( send
+, sign
+, finalize ) where
 
 import Control.Monad.State as S
 import Data.List as L
@@ -17,7 +18,6 @@ data TxState = TxState { transaction :: Maybe Tx
 data Tx = Tx { to       :: Address
              , amount   :: Int
              , signedBy :: [Address]
-             , verified :: Bool
              }
 
 init :: [Address] -> Int -> Ethereum TxState ()
@@ -27,23 +27,23 @@ init addrs n | length addrs < n = fail "fewer signers than required signatures"
                                                   , minSigners  = n }
 
 createTx :: Address -> Int -> Address -> Tx
-createTx a i v = Tx { to = a, amount = i, signedBy = [v], verified = False }
+createTx recepient a creator = Tx { to = recepient, amount = a, signedBy = [creator] }
 
-newTransaction (minSigners,1) :: Address -> Int -> Ethereum TxState Int
-newTransaction to amount = S.modify $ \s -> s{ transaction = Just (createTx to amount sender) }
+send (minSigners,1) :: Address -> Int -> Ethereum TxState Int
+send to amount = S.modify $ \s -> s{ transaction = Just (createTx to amount sender) }
 
-signTx (minSigners,1) :: Ethereum TxState ()
-signTx = S.modify $ \s -> s{ transaction = addSigner (transaction s) }
+sign (minSigners,1) :: Ethereum TxState ()
+sign = S.modify $ \s -> s{ transaction = addSigner (transaction s) }
   where
     addSigner Nothing   = Nothing
     addSigner (Just tx) = let signedBy' = L.insert a (signedBy tx)
-                           in Just tx{ signedBy = signedBy'
-                                     , verified = length signedBy >= minSigners }
+                           in Just tx{ signedBy = signedBy' }
 
 finalize (minSigners,-minSigners) :: Ethereum TxState ()
 finalize = do
-    tx <- S.gets $ transaction
-    if verified tx
+    tx <- S.gets transaction
+    required <- S.gets minSigners
+    if length (signedBy tx) >= required
       then send (to tx) (amount tx) >> modify (\s -> s{transaction = Nothing})
       else fail "Transaction not signed by enough parties"
 
