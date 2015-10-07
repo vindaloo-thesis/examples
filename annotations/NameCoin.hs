@@ -8,8 +8,8 @@ import Control.Monad.State as S
 
 type Registry = Map Word32 Word32
 
--- There can be at most 32 keys registered at once, and the function
--- will increase this number by one if ot succeeds.
+-- There can be at most 2^32 keys registered at once, and the
+-- function will increase this number by one if ot succeeds.
 register (2^32,1) :: Word32 -> Word32 -> Ethereum Registry ()
 register key val | key `member` state = fail "Existing key"
                  | otherwise          = S.modify (M.insert key val)
