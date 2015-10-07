@@ -38,9 +38,11 @@ function can be called.
 -}
 send ((),1) :: Address -> Int -> Ethereum TxState Int
 send to amount | sender `elem` signers state = S.modify $ \s -> s{ transaction = Just (createTx to amount sender) }
+               | otherwise                   = fail "Sender not a signer"
 
 sign ((),1) :: Ethereum TxState ()
 sign | sender `elem` signers state = S.modify $ \s -> s{ transaction = addSigner (transaction s) } -- we reeeeeally need better syntax for updating the state. make (a subset of) lenses part of the stdlib?
+     | otherwise                   = fail "Sender not a signer" -- This shouldn't be necessary. If no guards are matched, the transaction should fail and return all ether
   where
     addSigner Nothing   = Nothing
     addSigner (Just tx) = let signedBy' = L.insert a (signedBy tx)
