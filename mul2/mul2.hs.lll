@@ -1,0 +1,19 @@
+(return 0 
+    (lll 
+        (with '__funid 
+            (div (calldataload 0) 
+                26959946667150639794667015087019630673637144422540572481103610249216
+            )
+            (unless (iszero (eq (get '__funid) 1878662314)) 
+                (seq 
+                    (set 'v (calldataload 4))
+                    (seq 
+                        (set '_temp_521 (mul (get 'v) 2))
+                        (return (ref '_temp_521) 32)
+                    )
+                )
+            )
+        )
+        0
+    )
+)

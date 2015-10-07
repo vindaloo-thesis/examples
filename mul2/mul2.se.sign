@@ -1,0 +1,7 @@
+[{
+    "name": "double(int256)",
+    "type": "function",
+    "constant": false,
+    "inputs": [{ "name": "v", "type": "int256" }],
+    "outputs": [{ "name": "out", "type": "int256" }]
+}]
