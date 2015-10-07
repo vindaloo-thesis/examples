@@ -24,11 +24,31 @@ contract-wide state."
 In this case, 'Commit Choice' is the per-participant state type,
 while there is no contract-wide state, and no value is returned.
 
-(.=) is the "set" operator from the Lens library.
-Here it is assumed that it refers to the per-participant state,
-but we will have to make a distinction between the two states'
-operators if we are to actually separate the state into two.
--} 
-playerChoice (2,1) :: Commit Choice -> Ethereum (Commit Choice) () ()
-playerChoice = put
+The semantics of the triple is:
+(min participants, max participants, modification)
+i.e.
+() = playerChoice can be called regardless of how few participants there are.
+2  = playerChoice cannot be called when there are already 2 or more participants.
+1  = playerChoice increases the number of participants by 1, if it doesn't fail.
+
+'cp_put' is short for current participant_put. It works just as put for the
+State monad, but on the current participant's state.
+-}
+playerChoice ((),2,1) :: Commit Choice -> Ethereum (Commit Choice) () ()
+playerChoice = cp_put
+
+{-
+'participants' returns a list of all participant addresses.
+'p_get' takes an address as input and gives back its state.
+('cp_get' would do the same, but only for the current participant.)
+-}
+finalize (2,(),-2) :: Ethereum (Commit Choice) () ()
+finalize = do
+    [p1,p2] <- participants
+    c1 <- open =<< p_get p1
+    c2 <- open =<< p_get p2
+    case winner c1 c2 of
+      First  -> send (address p1) balance
+      Second -> send (address p2) balance
+      Tie    -> send (address p1) (balance/2) >> send (address p2) (balance/2)
 
