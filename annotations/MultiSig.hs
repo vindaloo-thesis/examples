@@ -18,6 +18,7 @@ data Tx = Tx { to       :: Address
              , signedBy :: [Address]
              }
 
+-- number of participants is 0 after running 'init' successfully.
 init (0) :: [Address] -> Int -> Ethereum TxState ()
 init addrs n | length addrs < n = fail "fewer signers than required signatures"
              | otherwise        = S.put $ TxState { transaction = Nothing
