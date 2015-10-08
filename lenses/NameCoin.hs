@@ -10,6 +10,9 @@ import Data.Maybe (fromMaybe)
 -- parameter to the Ethereum monad.
 state = { registry :: Map Word32 Word32 }
 
+-- (.=) is an operator for setting the value a lens is focused on.
+-- Lenses are basically abstractions of getters and setters. See next
+-- comment for more info.
 init :: Ethereum ()
 init = registry .= empty
 
