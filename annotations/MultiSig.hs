@@ -36,7 +36,7 @@ Here, for send and sign, it shows the maximum allowed value for the variable.
 For finalize, it shows the minimum number of participants required before the
 function can be called.
 -}
-send ((),1) :: Address -> Int -> Ethereum TxState Int
+send ((),1) :: Address -> Int -> Ethereum TxState ()
 send to amount | sender `elem` signers state = S.modify $ \s -> s{ transaction = Just (createTx to amount sender) }
                | otherwise                   = fail "Sender not a signer"
 
