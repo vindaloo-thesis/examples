@@ -3,7 +3,7 @@ contract NameCoin
 , get ) where
 
 import Control.Lens.Setter ((%=),(^.))
-import Data.Map (lookup)
+import Data.Map (lookup,member)
 import Data.Maybe (fromMaybe)
 
 -- The state is declared as a special data structure. It is an implicit
