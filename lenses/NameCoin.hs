@@ -26,7 +26,8 @@ state = { registry :: Map Word32 Word32 }
    This might not be worth it.
 
 (^.) is an operator for accessing the value a lens is focused on from a
-data structure. In this case, it simply retrieves the value.
+data structure. In this case, it simply retrieves the only value inside
+the data structure, namely the actual mapping.
 
 (%=) is an operator for modifying the value a lens is focused on using a
 function, when it is in a stateful monad. In this case, the supplied function
