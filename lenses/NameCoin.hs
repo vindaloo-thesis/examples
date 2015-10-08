@@ -2,14 +2,16 @@ contract NameCoin
 ( register
 , get ) where
 
-import Control.Lens.Setter ((%=),(^.))
+import Control.Lens.Setter ((%=),(^.),(.=))
 import Data.Map (lookup,member,empty)
 import Data.Maybe (fromMaybe)
 
 -- The state is declared as a special data structure. It is an implicit
--- parameter to the Ethereum monad. Its components are initialized in the
--- declaration.
-state = { registry = empty :: Map Word32 Word32 }
+-- parameter to the Ethereum monad.
+state = { registry :: Map Word32 Word32 }
+
+init :: Ethereum ()
+init = registry .= empty
 
 {- Two assumptions are made below:
 

@@ -3,7 +3,7 @@ contract MultiSig
 , sign
 , finalize ) where
 
-import Control.Lens ((^.),(.=))
+import Control.Lens ((^.),(.=),(%=))
 import Control.Monad (when)
 import Data.Map (empty,lookup,adjustWithKey) as M
 import Data.Maybe (isNothing,fromJust)
@@ -16,13 +16,14 @@ data Tx = Tx { recipient :: Address
 
 type TxId = Int
 
-state = { txs = empty :: Map TxId Tx
+state = { txs         :: Map TxId Tx
         , signers     :: [Address]
         , minSigners  :: Int
         }
 
 init :: [Address] -> Int -> Ethereum ()
 init addrs n = do
+    txs        .= empty
     signers    .= addrs
     minSigners .= n
 

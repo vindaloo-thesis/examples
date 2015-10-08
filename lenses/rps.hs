@@ -2,12 +2,17 @@ contract RPS
 ( playerChoice
 , finalize ) where
 
-import Control.Lens ((%=),(+=),(^.))
+import Control.Lens ((%=),(+=),(^.),(.=))
 import Data.Map (empty,assocs)
 
-state = { players  = empty :: Map Address (Commit Choice)
-        , nPlayers = 0     :: Int
+state = { players  :: Map Address (Commit Choice)
+        , nPlayers :: Int
         }
+
+init :: Ethereum ()
+init = do
+    players  .= empty
+    nPlayers .= 0
 
 playerChoice :: Commit Choice -> Ethereum ()
 playerChoice c | state^.nPlayers == 2 = fail "Game full"
