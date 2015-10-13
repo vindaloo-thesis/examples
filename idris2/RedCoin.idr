@@ -43,7 +43,7 @@ intest = ["hejje", 1337]
 
 
 --Should give a list of functions to access fields from a given state
-funcs : Store k -> Vect k ((HVect a) -> EVar)
+funcs : Store k -> Vect k ((HVect {k = k} a) -> EVar)
 funcs store = (map (\(i, t) =>
               case (snd t) of
                 EString => \x => Data.HVect.index i x  -- index (natToFin i) x
