@@ -41,23 +41,21 @@ intest : HVect [String, Int]
 --intest : itest --this should work but doesn't...?
 intest = ["hejje", 1337]
 
+-- Attempt to write cast instance, maybe this is the wrong way to go and funcs should have an elaborate type signature
+instance Cast (Data.HVect.index i a) String where
+  cast  x = "x"
 
---Should give a list of functions to access fields from a given state
+--Should give a vector of functions to access fields from a given state
+-- Given a Store, return a vector with functions to access each field in an instance of the store
 funcs : Store k -> Vect k ((HVect {k = k} a) -> EVar)
-funcs store = (map (\(i, t) =>
-              case (snd t) of
-                EString => \x => Data.HVect.index i x  -- index (natToFin i) x
-                -- EString => \x => (fromMaybe 1 (natToFin i k))  -- index (natToFin i) x
-                Int32 => \x => EI 5)
-             (zip range store))
-
---funcs2 : Store -> List ((HVect a) -> EVar) -- Nope. Can't infer a
--- funcs2 : Store -> List (a -> EVar) --sure, compiles, but no good
--- funcs2 store = (map ((\t => \x => ES "x"). snd) store)
+funcs store = map (\(i, t) =>
+    case (snd t) of
+         EString => \x => ES (cast (Data.HVect.index i x))
+         Int32 => \x => EI 5
+  ) (zip range store)
 
 main : IO ()
 main = putStrLn (show ((head (funcs test)) intest))
 -- main = putStrLn "lol"
--- main = putStrLn (show ((head (funcs2 test)) intest))
 
 
