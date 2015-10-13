@@ -32,13 +32,8 @@ interp store = HVect (map (interpField . snd) store)
 test : Store 2
 test = [("t3xt", EString), ("num", Int32)]
 
--- Resulting type
-itest : Type
-itest = interp test
-
 -- Example instantiated store
 intest : HVect [String, Int]
---intest : itest --this should work but doesn't...?
 intest = ["hejje", 1337]
 
 -- Attempt to write cast instance, maybe this is the wrong way to go and funcs should have an elaborate type signature
