@@ -10,6 +10,10 @@ import Data.Vect
 data Field = Int32 | EString | Map Field Field
 data EVar = ES String | EI Int
 
+instance Show EVar where
+  show (ES x) = x
+  show (EI x) = show x
+
 interpField : Field -> Type
 interpField Int32 = Int
 interpField EString = String
@@ -20,6 +24,7 @@ Store : Type
 Store = List (String, Field)
 
 -- Hetereogenic list: parametized with a separate type for each entry. Effectively a Vect more than a list.
+-- TODO: I just founds Data.HVect in the stdlib that does the same thing.
 data HList : List Type -> Type where
   Nil : HList []
   (::) : t -> HList ts -> HList (t :: ts)
@@ -50,8 +55,12 @@ funcs store = (map ((\t =>
                 Int32 => \x => EI 5)
             . snd) store)
 
+--funcs2 : Store -> List ((HList a) -> EVar) -- Nope. Can't infer a
+funcs2 : Store -> List (a -> EVar) --sure, compiles, but no good
+funcs2 store = (map ((\t => \x => ES "x"). snd) store)
+
 main : IO ()
 --main = putStrLn ((head (funcs store)) intest)
-main = putStrLn "lol"
+main = putStrLn (show ((head (funcs2 test)) intest))
 
 
