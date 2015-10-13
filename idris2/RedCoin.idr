@@ -44,11 +44,12 @@ intest = ["hejje", 1337]
 
 --Should give a list of functions to access fields from a given state
 funcs : Store k -> Vect k ((HVect a) -> EVar)
-funcs store = (map ((\t =>
-              case t of
-                EString => \x => ES "x"
+funcs store = (map (\(i, t) =>
+              case (snd t) of
+                EString => \x => Data.HVect.index i x  -- index (natToFin i) x
+                -- EString => \x => (fromMaybe 1 (natToFin i k))  -- index (natToFin i) x
                 Int32 => \x => EI 5)
-            . snd) store)
+             (zip range store))
 
 --funcs2 : Store -> List ((HVect a) -> EVar) -- Nope. Can't infer a
 -- funcs2 : Store -> List (a -> EVar) --sure, compiles, but no good
