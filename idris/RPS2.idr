@@ -21,8 +21,8 @@ isFinalizable (MkGame Nothing   Nothing)   = No (\TwoPlayers impossible)
 {-
 finalize : { [ETHEREUM] } Eff ()
 finalize = case isFinalizable !state of
-            Just p  => sendMoney !state p
-            Nothing => return ()
+            Yes prf => sendMoney !state p
+            No cntr => return ()
 
 sendMoney : (g : Game) -> Finalizable g -> { [ETHEREUM] } Eff ()
 sendMoney (MkGame (Just (p1,c1)) (Just (p2,c2))) Yes =
