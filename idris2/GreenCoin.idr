@@ -35,19 +35,20 @@ test = [EString, EInt]
 intest : HVect [String, Int]
 intest = ["hejje", 123]
 
+head : HVect (t::ts) -> t
+head [x] = x
+
+tail : HVect (t::ts) -> HVect ts
+tail (x::xs) = xs
+
 funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
-funcs1 _    = [\[x] => x]
+funcs1 _    = [Main.head]
 
 funcs2 : (fs : Vect 2 Field) -> HVect [
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
-funcs2 [t1,t2] = [(\[x,_] => x), (\[_,y] => y)]
+funcs2 _ = [Main.head, (\[_,y] => y)]
  
-head : HVect (t::ts) -> t
-head (x::xs) = x
-
-tail : HVect (t::ts) -> HVect ts
-tail (x::xs) = xs
 
 main : IO ()
 main = putStrLn (show ((head (tail (funcs2 test))) intest))
