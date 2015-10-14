@@ -5,10 +5,10 @@ import Data.HVect
 
 -- Missing head, tail function for HVect
 head : HVect (t::ts) -> t
-head [x] = x
+head (x::_) = x
 
 tail : HVect (t::ts) -> HVect ts
-tail (x::xs) = xs
+tail (_::xs) = xs
 
 data Field = EInt | EString 
 
@@ -31,5 +31,5 @@ sign {n = S (S Z)} [f1,f2] = [
   (HVect [interpField f1, interpField f2] -> (interpField f2))]
 
 funcs : (fs : Vect n Field) -> HVect (sign fs)
-funcs [_]    = [head]
-funcs [_, _] = [head, index 1]
+funcs [_]    = [GeneralStore.head]
+funcs [_, _] = [GeneralStore.head, index 1]
