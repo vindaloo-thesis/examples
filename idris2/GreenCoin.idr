@@ -44,8 +44,8 @@ funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> EVar]
 funcs1 [EInt]    = [\[x] => EI x]
 funcs1 [EString] = [\[x] => ES x]
 
-funcs2 : (fs : Vect 2 Field) -> HVect [HVect [interpField (head fs), interpField (head (tail fs))] -> EVar]
-funcs2 [t1, t2] = [EI 4, EI 5]
+funcs2 : (fs : Vect 2 Field) -> HVect [(HVect [interpField (head fs), interpField (head (tail fs))] -> EVar), (HVect [interpField (head fs), interpField (head (tail fs))] -> EVar)]
+funcs2 [t1, t2] = [(\_ => EI 5), (\_ => EI 5)]
 {-
 funcs2 [t1,t2] = [
   case t1 of
@@ -57,31 +57,6 @@ funcs2 [t1,t2] = [
   ]
 -}
         
-{-
-  funcs1 : (fs' : Vect 1 Field) -> HVect [HVect [interpField (Data.Vect.head fs), interpField (Data.Vect.head (tail fs))] -> EVar]
-  funcs1 [_, EInt] = [\(x::y::xs) => EI y]
-  funcs1 [_, EString] = [\(x::y::xs) => ES y]
--}
-
--- funcs2 : ((f1:: : Vect 2 Field) -> HVect [(interpField f1 -> EVar)::(interpField f2 -> EVar)]
--- funcs2 (EInt::rs) = EI :: funcs1 rs
-{-
-funcs : (s: Vect n (String, Field)) -> Vect n ((interp s) -> EVar)
-funcs [] = []
-funcs ((_,EInt) :: xs)    = (\x => EI 4)::funcs xs
-funcs ((_,EString) :: xs) = (\x => ES "XX")::funcs xs
--}
-
-{-
-funcs : (s: Vect n Type) -> Vect n ((HVect {k = n} a) -> EVar)
-funcs r@((_,EString) :: xs) = lookup where
-  lookup : (interp r) -> EVar
-  lookup x = case x of
-                
-  lookup  x    = ES "not found"
-
--}
-
 head : HVect (t::ts) -> t
 head (x::xs) = x
 
