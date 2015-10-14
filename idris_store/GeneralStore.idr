@@ -30,13 +30,17 @@ sign {n = S (S Z)} [f1,f2] = [
   (HVect [interpField f1, interpField f2] -> (interpField f1)),
   (HVect [interpField f1, interpField f2] -> (interpField f2))]
 
-funcs :  (fs : Vect n Field) -> {default proof { trivial; } p : ( n < 3) = True} -> (case n of 
+funcs :  (fs : Vect n Field) -> {default proof { trivial; } p : ( n < 3) = True} -> HVect t
+
+{-
+(case n of 
          Z   => HVect []
          S Z => HVect [HVect [interpField (head fs)] -> interpField (head fs)]
          S (S Z) => HVect [
             (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
             (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))
           ])
+-}
 (HVect []) <== funcs      = []
 funcs [_]    = [GeneralStore.head]
 funcs [_, _] = [GeneralStore.head, index 1]
