@@ -45,6 +45,8 @@ funcs1 [EInt]    = [\[x] => EI x]
 funcs1 [EString] = [\[x] => ES x]
 
 funcs2 : (fs : Vect 2 Field) -> HVect [HVect [interpField (head fs), interpField (head (tail fs))] -> EVar]
+funcs2 [t1, t2] = [EI 4, EI 5]
+{-
 funcs2 [t1,t2] = [
   case t1 of
        EInt =>    (\[x,y] => EI x)
@@ -53,6 +55,7 @@ funcs2 [t1,t2] = [
        EInt    => (\[x,y] => EI y)
        EString => (\[x,y] => ES y)
   ]
+-}
         
 {-
   funcs1 : (fs' : Vect 1 Field) -> HVect [HVect [interpField (Data.Vect.head fs), interpField (Data.Vect.head (tail fs))] -> EVar]
