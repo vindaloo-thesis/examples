@@ -24,12 +24,12 @@ Store k = Vect k Field
 interp : Store k -> Type
 interp store = HVect (map interpField store)
 
--- See GeneralStore for failed unification experiment
-funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
-funcs1 _    = [head]
+sign : Vect n Field -> Vect n Type
+sign {n = S Z}     [f] = [HVect [interpField f] -> interpField f]
+sign {n = S (S Z)} [f1,f2] = [
+  (HVect [interpField f1, interpField f2] -> (interpField f1)),
+  (HVect [interpField f1, interpField f2] -> (interpField f2))]
 
-funcs2 : (fs : Vect 2 Field) -> HVect [
-  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
-  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
-funcs2 _ = [head, index 1]
-
+funcs : (fs : Vect n Field) -> HVect (sign fs)
+funcs [_]    = [Main.head]
+funcs [_, _] = [Main.head, index 1]
