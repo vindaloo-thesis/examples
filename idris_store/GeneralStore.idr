@@ -32,7 +32,7 @@ sign {n = S (S Z)} [f1,f2] = [
 
 funcs :  (fs : Vect n Field) -> (( n < 2) = True) -> (if n == S Z then HVect [
           HVect [interpField (head fs)] -> interpField (head fs)
-        ] else HVect [
+        ] else if n == S ( S Z) then HVect [
           (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
           (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))
         ])
