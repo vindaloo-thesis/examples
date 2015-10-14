@@ -41,21 +41,13 @@ intest = ["hejje", 123]
 -- funcs : (s: Vect n Field) -> Vect n ((interp s) -> )
 
 funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
-funcs1 [EInt]    = [\[x] => x]
-funcs1 [EString] = [\[x] => x]
+funcs1 _    = [\[x] => x]
 
 funcs2 : (fs : Vect 2 Field) -> HVect [
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
-funcs2 [t1,t2] = [
-  case t1 of
-       EInt =>    (\[x,y] => x)
-       EString => (\[x,y] => x)
-  , case t2 of
-       EInt    => (\[x,y] => y)
-       EString => (\[x,y] => y)
-  ]
-        
+funcs2 [t1,t2] = [(\[x,_] => x), (\[_,y] => y)]
+ 
 head : HVect (t::ts) -> t
 head (x::xs) = x
 
