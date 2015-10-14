@@ -24,12 +24,6 @@ Store k = Vect k Field
 interp : Store k -> Type
 interp store = HVect (map interpField store)
 
-sign : Vect n Field -> Vect n Type
-sign {n = S Z}     [f] = [HVect [interpField f] -> interpField f]
-sign {n = S (S Z)} [f1,f2] = [
-  (HVect [interpField f1, interpField f2] -> (interpField f1)),
-  (HVect [interpField f1, interpField f2] -> (interpField f2))]
-
 funcs :  (fs : Vect n Field) -> {default proof { trivial; } p : ( n < 3) = True} -> (case n of 
          Z   => HVect []
          S Z => HVect [HVect [interpField (head fs)] -> interpField (head fs)]
