@@ -35,11 +35,6 @@ test = [EString, EInt]
 intest : HVect [String, Int]
 intest = ["hejje", 123]
 
---Should give a vector of functions to access fields from a given state
--- Given a Store, return a vector with functions to access each field in an instance of the store
--- funcs : Store k -> Vect k ((HVect {k = k} a) -> EVar)
--- funcs : (s: Vect n Field) -> Vect n ((interp s) -> )
-
 funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
 funcs1 _    = [\[x] => x]
 
