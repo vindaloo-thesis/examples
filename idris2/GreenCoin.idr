@@ -47,7 +47,7 @@ funcs1 _    = [Main.head]
 funcs2 : (fs : Vect 2 Field) -> HVect [
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
   (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
-funcs2 _ = [Main.head, (\[_,y] => y)]
+funcs2 _ = [Main.head, index 1]
  
 
 main : IO ()
