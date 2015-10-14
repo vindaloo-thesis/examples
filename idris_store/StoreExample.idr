@@ -3,7 +3,9 @@ module Main
 import Data.HVect
 import Store
 
--- The schema definition and field names (names probably not needed)
+-- TODO: Test if can assign functions like intended. try out namecoin example
+
+-- The schema definition and field names 
 test : Store 2
 test = [EString, EInt]
 
