@@ -30,6 +30,11 @@ sign {n = S (S Z)} [f1,f2] = [
   (HVect [interpField f1, interpField f2] -> (interpField f1)),
   (HVect [interpField f1, interpField f2] -> (interpField f2))]
 
-funcs : (fs : Vect n Field) -> HVect (sign fs)
+funcs :  (fs : Vect n Field) -> (( n < 2) = True) -> (if n == S Z then HVect [
+          HVect [interpField (head fs)] -> interpField (head fs)
+        ] else HVect [
+          (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
+          (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))
+        ])
 funcs [_]    = [GeneralStore.head]
 funcs [_, _] = [GeneralStore.head, index 1]
