@@ -45,8 +45,7 @@ funcs1 [EInt]    = [\[x] => EI x]
 funcs1 [EString] = [\[x] => ES x]
 
 funcs2 : (fs : Vect 2 Field) -> HVect [(HVect [interpField (head fs), interpField (head (tail fs))] -> EVar), (HVect [interpField (head fs), interpField (head (tail fs))] -> EVar)]
-funcs2 [t1, t2] = [(\_ => EI 5), (\_ => EI 5)]
-{-
+--funcs2 [t1, t2] = [(\_ => EI 5), (\_ => EI 5)]
 funcs2 [t1,t2] = [
   case t1 of
        EInt =>    (\[x,y] => EI x)
@@ -55,13 +54,15 @@ funcs2 [t1,t2] = [
        EInt    => (\[x,y] => EI y)
        EString => (\[x,y] => ES y)
   ]
--}
         
 head : HVect (t::ts) -> t
 head (x::xs) = x
 
+tail : HVect (t::ts) -> HVect ts
+tail (x::xs) = xs
+
 main : IO ()
-main = putStrLn (show ((Main.head (funcs2 test)) intest))
+main = putStrLn (show ((head ( Main.tail (funcs2 test))) intest))
 -- main = putStrLn "lol"
 
 
