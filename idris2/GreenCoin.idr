@@ -40,19 +40,20 @@ intest = ["hejje", 123]
 -- funcs : Store k -> Vect k ((HVect {k = k} a) -> EVar)
 -- funcs : (s: Vect n Field) -> Vect n ((interp s) -> )
 
-funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> EVar]
-funcs1 [EInt]    = [\[x] => EI x]
-funcs1 [EString] = [\[x] => ES x]
+funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
+funcs1 [EInt]    = [\[x] => x]
+funcs1 [EString] = [\[x] => x]
 
-funcs2 : (fs : Vect 2 Field) -> HVect [(HVect [interpField (head fs), interpField (head (tail fs))] -> EVar), (HVect [interpField (head fs), interpField (head (tail fs))] -> EVar)]
---funcs2 [t1, t2] = [(\_ => EI 5), (\_ => EI 5)]
+funcs2 : (fs : Vect 2 Field) -> HVect [
+  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
+  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
 funcs2 [t1,t2] = [
   case t1 of
-       EInt =>    (\[x,y] => EI x)
-       EString => (\[x,y] => ES x)
+       EInt =>    (\[x,y] => x)
+       EString => (\[x,y] => x)
   , case t2 of
-       EInt    => (\[x,y] => EI y)
-       EString => (\[x,y] => ES y)
+       EInt    => (\[x,y] => y)
+       EString => (\[x,y] => y)
   ]
         
 head : HVect (t::ts) -> t
@@ -62,7 +63,7 @@ tail : HVect (t::ts) -> HVect ts
 tail (x::xs) = xs
 
 main : IO ()
-main = putStrLn (show ((head ( Main.tail (funcs2 test))) intest))
+main = putStrLn (show ((head (tail (funcs2 test))) intest))
 -- main = putStrLn "lol"
 
 
