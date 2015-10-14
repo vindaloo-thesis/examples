@@ -12,7 +12,5 @@ intest : HVect [String, Int]
 intest = ["hejje", 123]
 
 main : IO ()
-main = putStrLn (show ((head (tail (funcs2 test))) intest))
--- main = putStrLn "lol"
-
+main = putStrLn (show ((head (funcs2 test)) intest))
 

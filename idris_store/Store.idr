@@ -5,10 +5,10 @@ import Data.HVect
 
 -- Missing head, tail function for HVect
 head : HVect (t::ts) -> t
-head [x] = x
+head (x::_) = x
 
 tail : HVect (t::ts) -> HVect ts
-tail (x::xs) = xs
+tail (_::xs) = xs
 
 data Field = EInt | EString 
 

@@ -1,4 +1,4 @@
-module Store
+module GeneralStore
 
 import Data.Vect
 import Data.HVect
@@ -31,5 +31,5 @@ sign {n = S (S Z)} [f1,f2] = [
   (HVect [interpField f1, interpField f2] -> (interpField f2))]
 
 funcs : (fs : Vect n Field) -> HVect (sign fs)
-funcs [_]    = [Main.head]
-funcs [_, _] = [Main.head, index 1]
+funcs [_]    = [head]
+funcs [_, _] = [head, index 1]
