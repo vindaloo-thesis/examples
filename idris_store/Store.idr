@@ -25,6 +25,9 @@ interp : Store k -> Type
 interp store = HVect (map interpField store)
 
 -- See GeneralStore for failed unification experiment
+funcs0 : (fs : Vect 0 Field) -> HVect []
+funcs0 _    = []
+
 funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
 funcs1 _    = [head]
 
