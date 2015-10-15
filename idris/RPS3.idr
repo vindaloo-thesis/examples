@@ -1,6 +1,8 @@
 module RPS3
 
-import Data.BoundedList
+import BoundedList
+import Data.Fin
+import Effects
 
 data Address = Addr Int
 data Commit a = Comm a
@@ -10,6 +12,8 @@ record Game where
   constructor MkGame
   players : BoundedList 2 (Address,Commit Choice)
 
-using (g : Game)
-  data Finalizable : Game -> Type where
-    TwoPlayers : length g = 2 -> Finalizable g
+playerChoice : Commit Choice -> Effects.SimpleEff.Eff () [STATE Game]
+playerChoice c with (length !players < FS (FS FZ))
+  | True = update (\(MkGame ps) => MkGame ((!sender,c)::ps))
+
+-- finalize : Commit
