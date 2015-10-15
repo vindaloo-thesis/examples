@@ -17,12 +17,16 @@ storet = interp store
 istore : HVect [Int]
 istore = [0]
 
+-- cnt : (interp store) -> Int -- SHOULD work, interp is total and all
+cnt : HVect [Int] -> Int
+cnt [i] = i
+
 namespace Contract
   Counter : Type -> Type
   Counter rTy = Eff rTy ['contState ::: STATE storet]
 
   increment : Counter ()
-  increment = 'contState :- update (\[i] => [i+1]) 
+  increment = 'contState :- update (\st => [cnt st + 1]) 
 
   count : Counter Int
   count = pure (head !('contState :- get))
