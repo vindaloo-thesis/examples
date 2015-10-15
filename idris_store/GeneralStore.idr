@@ -24,7 +24,13 @@ Store k = Vect k Field
 interp : Store k -> Type
 interp store = HVect (map interpField store)
 
-funcs :  (fs : Vect n Field) -> {auto p : ( n < 3) = True} -> (case n of 
+funcs : (ts : Vect n Type) -> HVect (map (\t => HVect ts -> t) ts)
+-- funcs : (fs: Store n) -> HVect (map (\t => interp fs -> t) (map interpField fs))
+{-
+funcs :  (fs : Vect n Field) -> {auto p : ( n < 3) = True} ->
+                                
+                                
+                                (case n of 
          Z   => HVect []
          S Z => HVect [HVect [interpField (head fs)] -> interpField (head fs)]
          S (S Z) => HVect [
@@ -33,6 +39,7 @@ funcs :  (fs : Vect n Field) -> {auto p : ( n < 3) = True} -> (case n of
           ]
          otherwise => HVect []
         )
+-}
 funcs []     = []
 funcs [_]    = [GeneralStore.head]
 funcs [_, _] = [GeneralStore.head, index 1]
