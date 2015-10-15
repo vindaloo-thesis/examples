@@ -2,6 +2,7 @@ module GeneralStore
 
 import Data.Vect
 import Data.HVect
+import Data.Vect.Quantifiers
 
 -- Missing head, tail function for HVect
 head : HVect (t::ts) -> t
@@ -24,22 +25,26 @@ Store k = Vect k Field
 interp : Store k -> Type
 interp store = HVect (map interpField store)
 
-funcs : (ts : Vect n Type) -> HVect (map (\t => HVect ts -> t) ts)
--- funcs : (fs: Store n) -> HVect (map (\t => interp fs -> t) (map interpField fs))
-{-
-funcs :  (fs : Vect n Field) -> {auto p : ( n < 3) = True} ->
-                                
-                                
-                                (case n of 
-         Z   => HVect []
-         S Z => HVect [HVect [interpField (head fs)] -> interpField (head fs)]
-         S (S Z) => HVect [
-            (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
-            (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))
-          ]
-         otherwise => HVect []
-        )
--}
-funcs []     = []
-funcs [_]    = [GeneralStore.head]
-funcs [_, _] = [GeneralStore.head, index 1]
+--Courtesy of Melvar in #idris:
+
+extends : All (\t => HVect ts -> t) us -> All (\t => HVect (u :: ts) -> t) us
+extends []        = []
+extends (f :: fs) = (f . tail) :: extends fs
+
+funcs' : (ts : Vect n Type) -> All (\t => HVect ts -> t) ts
+funcs' []        = []
+funcs' (x :: xs) = head :: extends (funcs' xs)
+
+allToHVect : All p xs -> HVect (map p xs)
+allToHVect []        = []
+allToHVect (x :: xs) = x :: allToHVect xs
+
+mapMapMap : (f : b -> c) -> (g : a -> b) -> (xs : Vect n a) -> map f (map g xs) = map (f . g) xs
+mapMapMap f g []        = Refl
+mapMapMap f g (x :: xs) = cong $ mapMapMap f g xs
+
+--funcs : (fs : Store n) -> HVect (map (\t => interp fs -> t) (map GeneralStore.interpField fs))
+--funcs fs = allToHVect $ funcs' $ map interpField fs
+
+funcs : (fs : Store n) -> HVect (map (\f => interp fs -> interpField f) fs)
+funcs fs = rewrite sym $ mapMapMap (\t => interp fs -> t) interpField fs in allToHVect $ funcs' $ map interpField fs

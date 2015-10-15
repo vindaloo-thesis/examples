@@ -27,7 +27,7 @@ istore2 : HVect [String, Int]
 istore2 = ["hejje", 123]
 
 main : IO ()
-main = putStrLn (show ((GeneralStore.head (funcs (map interpField store2))) istore2))
+main = putStrLn ((head (tail (funcs store2))) istore2)
 -- main = putStrLn (show (funcs store0))
 --main = putStrLn (show (funcs store0 Refl))
 --main = putStrLn (show (funcs store0 Refl))
