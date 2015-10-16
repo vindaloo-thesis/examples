@@ -6,6 +6,7 @@ import Effect.StdIO
 import Data.HVect
 import GeneralStore
 import Control.IOExcept
+import Ethereum
 
 
 store : Store 1
