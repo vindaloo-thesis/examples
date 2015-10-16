@@ -3,6 +3,7 @@ module RPS3
 import BoundedList
 import Data.Fin
 import Effects
+import Effect.State
 
 data Address = Addr Int
 data Commit a = Comm a
