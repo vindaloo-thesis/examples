@@ -45,8 +45,6 @@ myProg = do
 instance Default t => Default (HVect [t]) where
   default = [default]
 
-
-
 namespace Main
   main : IO ()
   main = run myProg
