@@ -14,33 +14,41 @@ data Commit a = Comm a
 data Exactly : Nat -> Type where
   TheNumber : (n : Nat) -> Exactly n
 
-ETHEREUM : Nat -> Nat -> EFFECT
-ETHEREUM v b = MkEff (Exactly v,Exactly b) Ethereum
+ETHEREUM : {v : Nat} -> {b : Nat} -> Type -> Exactly b -> EFFECT
+ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
 
-value : {v : Nat} -> Effects.SimpleEff.Eff (Exactly v) [ETHEREUM v b]
-value {v} = return (TheNumber v)
+(+) : {a : Nat} -> {b : Nat} -> Exactly a -> Exactly b -> Exactly (a+b)
+(+) {a} {b} _ _ = TheNumber (a+b)
 
-balance : {b : Nat} -> Effects.SimpleEff.Eff (Exactly b) [ETHEREUM v b]
-balance {b} = return (TheNumber b)
+(-) : (a: Type) -> (b : Type) -> Type
+(-) a b with (a,b)
+    | (Exactly i,Exactly j) = Exactly (i-j)
+    | otherwise             = ()
 
-send : (a : Fin (S v)) -> Address -> Eff () [ETHEREUM v b]
-                                            [ETHEREUM (v - (finToNat a)) b]
-send amount to = believe_me ()
+value : {v : Exactly i} -> Effects.SimpleEff.Eff (Exactly i) [ETHEREUM v b]
+value {v} = return v
 
-save : (a : Fin (S v)) -> Eff () [ETHEREUM v b]
-                                 [ETHEREUM (v - (finToNat a)) (b + (finToNat a))]
+balance : {b : Exactly i} -> Effects.SimpleEff.Eff (Exactly i) [ETHEREUM v b]
+balance {b} = return b
+
+send : (a : Exactly i) -> Address -> Eff () [ETHEREUM v b]
+                                            [ETHEREUM (v-a) b]
+send _ _ = believe_me ()
+
+save : (a : Exactly i) -> Eff () [ETHEREUM v b]
+                                 [ETHEREUM (v-a) (b + a)]
 save amount = believe_me ()
 
-saveAll : Eff () [ETHEREUM v b]
-                 [ETHEREUM 0 (b+v)]
+saveAll : Effects.TransEff.Eff () [ETHEREUM v b]
+                 [ETHEREUM (TheNumber 0) (b+v)]
 saveAll = believe_me ()
 
-load : (a : Fin (S b)) -> Eff () [ETHEREUM v b]
-                                 [ETHEREUM (v + (finToNat a)) (b - (finToNat a))]
-load amount = believe_me ()
+load : (a : Exactly i) -> Eff () [ETHEREUM v b]
+                                 [ETHEREUM (v+a) (b-a)]
+load _ = believe_me ()
 
-loadAll : Eff (Exactly (v+b)) [ETHEREUM v b]
-                              [ETHEREUM (v+b) 0]
+loadAll : Eff () [ETHEREUM v b]
+                 [ETHEREUM v (TheNumber 0)]
 loadAll = believe_me ()
 
 open : Commit a -> Eff a [ETHEREUM v b]
@@ -48,6 +56,9 @@ open (Comm a) = return a
 
 sender : Eff Address [ETHEREUM v b]
 sender = return $ Addr 0
+
+exactlyToNat : {n : Nat} -> Exactly n -> Nat
+exactlyToNat {n} (TheNumber n) = n
 
 fromExactly : Exactly n -> Fin (S n)
 fromExactly (TheNumber Z)     = FZ

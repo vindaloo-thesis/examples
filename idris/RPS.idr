@@ -35,16 +35,16 @@ playerChoice c = _ -- update ((!sender,c)::)
 
 addPlayer : Game n -> (Address,Commit Choice) -> Game n
 
-payWinner : Game 2 -> Effects.TransEff.Eff () [ETHEREUM v b] [ETHEREUM 0 0]
+payWinner : Game 2 -> Effects.TransEff.Eff () [ETHEREUM v b] [ETHEREUM (TheNumber 0) (TheNumber 0)]
 payWinner (MkGame [(p1,c1),(p2,c2)]) = do
   loadAll
-  send (fromExactly !value) p1
+  v <- value
+  send v p1
 
- {- 
+ {-
   case winner !(open c1) !(open c2) of
-    First  => send (fromExactly !value) p1
+    First  => value >>= \v > send (fromExactly v) p1
     Second => send (fromExactly !value) p2
     Tie    => let payout = !value/2
                in send payout p1 >> send payout p2
-
 -}

@@ -11,6 +11,9 @@ instance Eq Choice where
   Paper    == Paper    = True
   c1       == c2       = False
 
+record Game where
+  constructor MkGame
+
 
 data Result = First | Second | Tie
 
@@ -23,3 +26,6 @@ winner c1 c2 = if c1 == c2
                         (Rock    , Scissors) => First
                         (c1,c2)              => Second
 
+joinGame : Commit Choice -> Eff () [ETHEREUM]
+joinGame c = require (length !players < 2) $ do
+    

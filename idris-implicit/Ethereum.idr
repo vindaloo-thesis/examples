@@ -1,6 +1,7 @@
 module Ethereum
 
 import Effects
+import Effect.Exception
 
 data Address = Addr Int
 data Commit a = Comm a
@@ -27,3 +28,11 @@ sender = return (Addr 0)
 
 open : Commit a -> Eff a [ETHEREUM]
 open (Comm a) = return a
+
+require : Bool -> a -> Eff a [EXCEPTION String,ETHEREUM]
+require True  a = return a
+require False a = do
+  if !value <= !balance
+    then send !value !sender
+    else send !balance !sender
+  raise "Invalid call, all ether returned."
