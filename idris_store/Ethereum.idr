@@ -33,13 +33,15 @@ instance Default (Exactly n) where
 data Ethereum : Effect where
   Balance : sig Ethereum Nat (Exactly v, Exactly b)
   Value   : sig Ethereum Nat (Exactly v, Exactly b)
+  Save    : (a: Nat) -> {auto p: LTE a v} -> sig Ethereum () (Exactly v, Exactly b) (Exactly (v-a), (Exactly (b+a)))
 
 ETHEREUM : {v : Nat} -> {b : Nat} -> Exactly v -> Exactly b -> EFFECT
 ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
 
 instance Handler Ethereum m where
-  handle (MkPair v b) Balance k = k (exactlyToNat b) (MkPair v b)
-  handle (MkPair v b) Value   k = k (exactlyToNat v) (MkPair v b)
+  handle (MkPair v b) Balance  k = k (exactlyToNat b) (MkPair v b)
+  handle (MkPair v b) Value    k = k (exactlyToNat v) (MkPair v b)
+  handle (MkPair v b) (Save a) k = let a' = TheNumber a in k () (MkPair (v-a') (b+a'))
 
 balance : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 balance = call $ Balance
@@ -47,13 +49,11 @@ balance = call $ Balance
 value : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 value = call $ Value
 
-{-
 save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {auto p: LTE a b} ->
        TransEff.Eff () [ETHEREUM (TheNumber v) (TheNumber b)]
                        [ETHEREUM (TheNumber (v+a)) (TheNumber (b-a))]
-save a = believe_me
- send a = call $ Send a
- -}
+-- save a = believe_me
+-- send a = call $ Send a
 
 
 
