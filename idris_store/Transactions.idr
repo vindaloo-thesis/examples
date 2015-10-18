@@ -1,4 +1,4 @@
-module Counter
+module Transactions
 
 import Effects
 import Effect.State
@@ -18,7 +18,6 @@ storet = interp store
 istore : HVect [Int]
 istore = [0]
 
--- cnt : (interp store) -> Int -- SHOULD work, interp is total and all
 cnt : HVect [Int] -> Int
 cnt [i] = i
 
@@ -31,24 +30,13 @@ instance Handler Ethereum m where
 
 namespace Contract
   Counter : Type -> Type
-  Counter rTy = Eff rTy [ --'contState ::: STATE storet
-                        'eState ::: es]
-
-{-
-  increment : Counter ()
-  increment = 'contState :- update (\st => [cnt st + 1]) 
-
-  count : Counter Int
-  count = pure (GeneralStore.head !('contState :- get))
-  -}
-
+  Counter rTy = Eff rTy ['eState ::: es]
   gb : Counter Nat
   gb = pure  (!('eState :- getBalance))
 
 namespace User
   User : Type -> Type
-  User rTy = Eff rTy [-- 'contState ::: STATE storet
-                     'eState ::: es
+  User rTy = Eff rTy ['eState ::: es
                      , STDIO]
 
 myProg : User ()
@@ -60,4 +48,6 @@ instance Default t => Default (HVect [t]) where
 namespace Main
   main : IO ()
   main = run myProg
+
+
 

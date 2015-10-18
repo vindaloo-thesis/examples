@@ -21,6 +21,9 @@ interpField EString = String
 Store : Nat -> Type
 Store k = Vect k Field
 
+gStore : {ts: Vect n Type} -> Type
+gStore {ts}  = HVect ts
+
 -- Interpretation function: takes Store and creates type
 interp : Store k -> Type
 interp store = HVect (map interpField store)
