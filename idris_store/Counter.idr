@@ -22,19 +22,26 @@ istore = [0]
 cnt : HVect [Int] -> Int
 cnt [i] = i
 
+es : EFFECT
+es = ETHEREUM {v=100} storet (TheNumber 100)
+instance Handler Ethereum (es)
+
 namespace Contract
   Counter : Type -> Type
-  Counter rTy = Eff rTy ['contState ::: STATE storet]
+  Counter rTy = Eff rTy [ 'contState ::: STATE storet
+                        , 'eState ::: es]
 
   increment : Counter ()
   increment = 'contState :- update (\st => [cnt st + 1]) 
 
   count : Counter Int
-  count = pure (head !('contState :- get))
+  count = pure (GeneralStore.head !('contState :- get))
 
 namespace User
   User : Type -> Type
-  User rTy = Eff rTy ['contState ::: STATE (storet), STDIO]
+  User rTy = Eff rTy [ 'contState ::: STATE (storet)
+                     , 'eState ::: es
+                     , STDIO]
 
 myProg : User ()
 myProg = do

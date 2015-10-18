@@ -5,23 +5,27 @@ import Data.Fin
 
 data Address = Addr Int
 
+data Exactly : Nat -> Type where
+  TheNumber : (n : Nat) -> Exactly n
+
 data Ethereum : Effect where
---  Get :      sig State a  a
---  Put : b -> sig State () a b
+  Get : Ethereum a  a (\x => a)
+  Put : Ethereum () a (\x => b)
+
+ETHEREUM : {v : Nat} -> {b : Nat} -> Type -> Exactly b -> EFFECT
+ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
 
 data Commit a = Comm a
 
-data Exactly : Nat -> Type where
-  TheNumber : (n : Nat) -> Exactly n
+
+instance Default (Exactly n) where
+  default = TheNumber n
 
 (+) : {a : Nat} -> {b : Nat} -> Exactly a -> Exactly b -> Exactly (a+b)
 (+) {a} {b} _ _ = TheNumber (a+b)
 
 (-) : {a: Nat} -> {b: Nat} -> Exactly a -> Exactly b -> {auto smaller : LTE b a} -> Exactly (a-b)
 (-) {a} {b} _ _ = TheNumber (a-b)
-
-ETHEREUM : {v : Nat} -> {b : Nat} -> Type -> Exactly b -> EFFECT
-ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
 
 value : {v: Exactly i} -> Effects.SimpleEff.Eff (Exactly i) [ETHEREUM (Exactly i) b]
 value {v} = return v
