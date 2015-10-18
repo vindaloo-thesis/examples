@@ -12,11 +12,9 @@ es : EFFECT
 es = ETHEREUM (TheNumber 100) (TheNumber 500)
 
 instance Handler Ethereum m where
-  --handle (MkPair v b) getBalance k = k 150 150
-  handle (MkPair v b) GetBalance k = k 150 (MkPair v b)
-  --handle (Exactly v, Exactly b) getBalance 
+  handle (MkPair v b) GetBalance k = k (exactlyToNat v) (MkPair v b)
 
-getBalance : Eff Nat [es]
+getBalance : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 getBalance = call $ GetBalance
 
 namespace Contract
@@ -25,7 +23,7 @@ namespace Contract
 
   gb : Counter Nat
   gb = do
-    b <- getBalance
+    b <- ('eState :- getBalance)
     return b
 
 namespace User
