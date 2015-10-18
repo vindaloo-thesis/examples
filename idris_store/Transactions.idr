@@ -11,24 +11,32 @@ import Ethereum
 es : Nat -> Nat -> EFFECT
 es v b = ETHEREUM (TheNumber v) (TheNumber b)
 
-
-getBalance : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
-getBalance = call $ GetBalance
-
 namespace Contract
   Counter : {v: Nat} -> {b: Nat} -> Type -> Type
-  Counter {v} {b} rTy = Eff rTy ['eState ::: es v b]
+  --Counter {v} {b} rTy = Eff rTy ['es ::: es v b] [es 0 b']
+  Counter {v} {b} rTy = Eff rTy ['es ::: es v b] -- [es 0 10]
 
   getBalance : Counter Nat
   getBalance = do
-    b <- ('eState :- Transactions.getBalance)
+    b <- 'es :- balance
     return b
+
+  getValue : Counter Nat
+  getValue = return !('es :- value)
+
+  saveAll : Counter Nat
+  saveAll = do
+    v <- ('es :- value)
+    --'es :- save v
+    return !('es :- balance)
 
 namespace Main
   main : IO ()
-  main = runInit ['eState := (TheNumber 50, TheNumber 3), ()] (do
-    b <- Contract.getBalance
-    printLn b)
+  main = runInit ['es := (TheNumber 5, TheNumber 30), ()] (do
+    printLn ("Original balance: " ++ (show !(getBalance)))
+    printLn ("Original value: " ++ (show !(getValue)))
+    printLn ("Balance after saving: " ++ (show !(saveAll)))
+  )
 
 
 
