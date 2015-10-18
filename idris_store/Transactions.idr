@@ -8,35 +8,27 @@ import GeneralStore
 import Control.IOExcept
 import Ethereum
 
-es : EFFECT
-es = ETHEREUM (TheNumber 100) (TheNumber 500)
+es : Nat -> Nat -> EFFECT
+es v b = ETHEREUM (TheNumber v) (TheNumber b)
 
-instance Handler Ethereum m where
-  handle (MkPair v b) GetBalance k = k (exactlyToNat v) (MkPair v b)
 
 getBalance : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 getBalance = call $ GetBalance
 
 namespace Contract
-  Counter : Type -> Type
-  Counter rTy = Eff rTy ['eState ::: es]
+  Counter : {v: Nat} -> {b: Nat} -> Type -> Type
+  Counter {v} {b} rTy = Eff rTy ['eState ::: es v b]
 
-  gb : Counter Nat
-  gb = do
-    b <- ('eState :- getBalance)
+  getBalance : Counter Nat
+  getBalance = do
+    b <- ('eState :- Transactions.getBalance)
     return b
-
-namespace User
-  User : Type -> Type
-  User rTy = Eff rTy ['eState ::: es
-                     , STDIO]
-
-myProg : User ()
-myProg = printLn (runPure ('eState :- gb))
 
 namespace Main
   main : IO ()
-  main = run myProg
+  main = runInit ['eState := (TheNumber 50, TheNumber 3), ()] (do
+    b <- Contract.getBalance
+    printLn b)
 
 
 
