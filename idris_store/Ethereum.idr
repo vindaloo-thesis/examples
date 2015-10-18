@@ -14,12 +14,13 @@ instance Show (Exactly n) where
 
 data Ethereum : Effect where
   --getBalance : Ethereum Nat (Exactly v, Exactly b) (\x => (Exactly v, Exactly b))
-  getBalance : sig Ethereum Nat (Exactly v, Exactly b)
+  GetBalance : sig Ethereum Nat (Exactly v, Exactly b)
   --getBalance : sig Ethereum Nat (Exactly v, Exactly b) -- Nat (Exactly v, Exactly b) (\x => Nat)
   {-
   Get : Ethereum a  a (\x => a)
   Put : Ethereum () a (\x => b)
   -}
+
 
 ETHEREUM : {v : Nat} -> {b : Nat} -> Exactly v -> Exactly b -> EFFECT
 ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
