@@ -8,11 +8,13 @@ data Address = Addr Int
 
 data Exactly : Nat -> Type where
   TheNumber : (n : Nat) -> Exactly n
+
 instance Show (Exactly n) where
   show _ = "x"
 
 data Ethereum : Effect where
-  getBalance : sig Ethereum Nat (Exactly v, Exactly b) (\x => Nat)
+  getBalance : Ethereum Nat (Exactly v, Exactly b) (\x => (Exactly v, Exactly b))
+  --getBalance : sig Ethereum Nat (Exactly v, Exactly b) -- Nat (Exactly v, Exactly b) (\x => Nat)
   {-
   Get : Ethereum a  a (\x => a)
   Put : Ethereum () a (\x => b)
@@ -20,7 +22,6 @@ data Ethereum : Effect where
 
 ETHEREUM : {v : Nat} -> {b : Nat} -> Type -> Exactly b -> EFFECT
 ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
-
 
 
 data Commit a = Comm a

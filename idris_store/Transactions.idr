@@ -25,14 +25,16 @@ es : EFFECT
 es = ETHEREUM {v=100} storet (TheNumber 100)
 
 instance Handler Ethereum m where
-  handle (MkPair v b) getBalance k = k 150 150
+  --handle (MkPair v b) getBalance k = k 150 150
+  handle (MkPair v b) getBalance k = k 150 (MkPair v b)
   --handle (Exactly v, Exactly b) getBalance 
 
 namespace Contract
   Counter : Type -> Type
   Counter rTy = Eff rTy ['eState ::: es]
+
   gb : Counter Nat
-  gb = pure  (!('eState :- getBalance))
+  gb = pure (!('eState :- getBalance))
 
 namespace User
   User : Type -> Type
