@@ -4,39 +4,45 @@ import Effects
 import Data.Fin
 import GeneralStore
 
+------------ TYPES -----------------
+
+data Commit a = Comm a
 data Address = Addr Int
 
+-------------- EXACTLY --------------
 data Exactly : Nat -> Type where
   TheNumber : (n : Nat) -> Exactly n
 
-instance Show (Exactly n) where
-  show _ = "x"
+exactlyToNat : {n : Nat} -> Exactly n -> Nat
+exactlyToNat {n} (TheNumber n) = n
 
-data Ethereum : Effect where
-  --getBalance : Ethereum Nat (Exactly v, Exactly b) (\x => (Exactly v, Exactly b))
-  GetBalance : sig Ethereum Nat (Exactly v, Exactly b)
-  --getBalance : sig Ethereum Nat (Exactly v, Exactly b) -- Nat (Exactly v, Exactly b) (\x => Nat)
-  {-
-  Get : Ethereum a  a (\x => a)
-  Put : Ethereum () a (\x => b)
-  -}
-
-
-ETHEREUM : {v : Nat} -> {b : Nat} -> Exactly v -> Exactly b -> EFFECT
-ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
-
-
-data Commit a = Comm a
-
-
-instance Default (Exactly n) where
-  default = TheNumber n
+fromExactly : Exactly n -> Fin (S n)
+fromExactly (TheNumber Z)     = FZ
+fromExactly (TheNumber (S n)) = FS (fromExactly (TheNumber n))
 
 (+) : {a : Nat} -> {b : Nat} -> Exactly a -> Exactly b -> Exactly (a+b)
 (+) {a} {b} _ _ = TheNumber (a+b)
 
 (-) : {a: Nat} -> {b: Nat} -> Exactly a -> Exactly b -> {auto smaller : LTE b a} -> Exactly (a-b)
 (-) {a} {b} _ _ = TheNumber (a-b)
+
+instance Default (Exactly n) where
+  default = TheNumber n
+
+-------------- EFFECT --------------
+data Ethereum : Effect where
+  GetBalance : sig Ethereum Nat (Exactly v, Exactly b)
+
+instance Handler Ethereum m where
+  handle (MkPair v b) GetBalance k = k (exactlyToNat v) (MkPair v b)
+
+ETHEREUM : {v : Nat} -> {b : Nat} -> Exactly v -> Exactly b -> EFFECT
+ETHEREUM {v} {b} _ _ = MkEff (Exactly v,Exactly b) Ethereum
+
+
+
+
+
 
 {-
 value : {v: Exactly i} -> Effects.SimpleEff.Eff (Exactly i) [ETHEREUM (Exactly i) b]
@@ -57,11 +63,4 @@ save amount = believe_me ()
 load : (a : TheNumber i) -> Eff () [ETHEREUM v b]
 load _ = believe_me ()
 -}
-
-exactlyToNat : {n : Nat} -> Exactly n -> Nat
-exactlyToNat {n} (TheNumber n) = n
-
-fromExactly : Exactly n -> Fin (S n)
-fromExactly (TheNumber Z)     = FZ
-fromExactly (TheNumber (S n)) = FS (fromExactly (TheNumber n))
 
