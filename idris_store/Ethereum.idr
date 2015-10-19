@@ -14,7 +14,7 @@ data Exactly : Nat -> Type where
   TheNumber : (n : Nat) -> Exactly n
 
 exactlyToNat : {n : Nat} -> Exactly n -> Nat
-exactlyToNat {n} (TheNumber n) = n
+exactlyToNat {n} _ = n
 
 fromExactly : Exactly n -> Fin (S n)
 fromExactly (TheNumber Z)     = FZ
@@ -49,7 +49,6 @@ balance = call $ Balance
 value : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 value = call $ Value
 
---save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {default proof {trivial; } p: LTE a v} ->
 save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {p: LTE a v} ->
        TransEff.Eff () [ETHEREUM (TheNumber v) (TheNumber b)]
                        [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))]
