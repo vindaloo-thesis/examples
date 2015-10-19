@@ -49,11 +49,11 @@ balance = call $ Balance
 value : {v: Nat} -> {b: Nat} -> SimpleEff.Eff Nat [ETHEREUM (TheNumber v) (TheNumber b)]
 value = call $ Value
 
-save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {auto p: LTE a b} ->
+--save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {default proof {trivial; } p: LTE a v} ->
+save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {p: LTE a v} ->
        TransEff.Eff () [ETHEREUM (TheNumber v) (TheNumber b)]
-                       [ETHEREUM (TheNumber (v+a)) (TheNumber (b-a))]
--- save a = believe_me
--- send a = call $ Send a
+                       [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))]
+save a = call $ Save a
 
 
 

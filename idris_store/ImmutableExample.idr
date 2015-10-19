@@ -15,6 +15,7 @@ namespace Contract
   Counter : {v: Nat} -> {b: Nat} -> Type -> Type
   --Counter {v} {b} rTy = Eff rTy ['es :- es v b] 
   --Counter {v} {b} {v'} {b'} rTy = TransEff.Eff rTy ['es ::: es v b] [es v' b']
+  --Counter {v} {b} {b'} rTy = TransEff.Eff rTy [es v b] [es 0 b']
   Counter {v} {b} rTy = Eff rTy [es v b] [es v b]
 
   getBalance : Counter Nat
