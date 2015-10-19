@@ -54,6 +54,7 @@ data Ethereum : Effect where
   Value   : sig Ethereum Nat (Exactly v, Exactly b)
   --Save    : (a: Nat) -> {auto p: LTE a v} -> sig Ethereum Nat (Exactly v, Exactly b) (\a' => (Exactly (v-a'), Exactly (b+a')))
   Save    : (a: Nat) -> {auto p: LTE a v} -> Ethereum (Exactly v, Exactly b) (Exactly v, Exactly b) (\(TheNumber v', TheNumber b') => (Exactly v', Exactly b'))
+  --Save    : (a: Nat) -> {auto p: LTE a v} -> Ethereum (a': Nat ** LTE a' v) (Exactly v, Exactly b) (\(TheNumber v', TheNumber b') => (Exactly v', Exactly b'))
 
 --sig Ethereum Nat (Exactly v, Exactly b) (\a' => (Exactly (v-a'), Exactly (b+a')))
 
@@ -78,13 +79,27 @@ value = call $ Value
 
 {-
 save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {p: LTE a v} ->
-       TransEff.Eff () [ETHEREUM (TheNumber v) (TheNumber b)]
+       TransEff.Eff (Exactly v, Exactly b) [ETHEREUM (TheNumber v) (TheNumber b)]
                        [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))]
 -}
+{-
 save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {p: LTE a v} ->
-       DepEff.Eff (v',b') [ETHEREUM (TheNumber v) (TheNumber b)]
-                       (\(a ** LTE a v) => [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))])
-save a = call $ Save a
+       DepEff.Eff (Exactly v, Exactly b) [ETHEREUM (TheNumber v) (TheNumber b)]
+                       (\_ => [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))])
+-}
+{-
+save : {v: Nat} -> {b: Nat} -> (a: Nat) -> {p: LTE a v} -> {m: Type -> Type} ->
+       EffM m (Exactly v, Exactly b) [ETHEREUM (TheNumber v) (TheNumber b)]
+                       (\_ => [ETHEREUM (TheNumber (v-a)) (TheNumber (b+a))])
+-}
+--save : {a, b: _} -> {v', b': Nat} -> {e: Effect} ->
+save : {a, b: _} -> {v', b': Nat} -> --{e: Effect} ->
+			 --(eff: e t a b) ->
+			 (a': Nat) ->
+			 {auto smaller : LTE a' 100} ->
+			 {auto prf : EffElem Ethereum (Exactly 100, Exactly b) xs} ->
+       EffM m (Exactly 100, Exactly b) xs (\v => updateResTy v xs prf (Save a')) --((ETHEREUM (TheNumber v') (TheNumber b')) List.(::) List.Nil)
+save {prf} a = callP prf (Save a) 
 
 
 
