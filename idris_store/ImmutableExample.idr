@@ -21,6 +21,7 @@ namespace Contract
   getBalance : Counter Nat
   getBalance = do
     b <- (balance)
+    save 0
     return b
 
   getValue : Counter Nat
