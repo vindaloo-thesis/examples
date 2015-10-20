@@ -78,6 +78,9 @@ data EthereumRules : Effect where
             sig EthereumRules ()
             (Ethereum (Contract v b))
             (Ethereum (Contract (v-a) (b+a)))
+  Finish  : sig EthereumRules ()
+            (Ethereum (Contract 0 b))
+            (Ethereum NotRunning)
 
 ETHEREUM : CState -> EFFECT
 ETHEREUM h = MkEff (Ethereum h) EthereumRules
@@ -88,6 +91,7 @@ instance Handler EthereumRules m where
   handle (MkS v b) Value k    = k v (MkS v b)
   handle (MkS v b) Balance k  = k b (MkS v b)
   handle (MkS v b) (Save a) k = k () (MkS (v-a) (b+a))
+  handle (MkS Z b) Finish k   = k () MkI
 
 value : Eff Nat [ETHEREUM (Contract v b)]
 value = call $ Value
@@ -97,3 +101,6 @@ balance = call $ Balance
 
 save : (a : Nat) -> {v: Nat} -> {auto p: LTE a v} -> Eff () [ETHEREUM (Contract v b)] [ETHEREUM (Contract (v-a) (b+a))]
 save a = call $ Save a
+
+finish : Eff () [ETHEREUM (Contract 0 b)] [ETHEREUM NotRunning]
+finish = call Finish

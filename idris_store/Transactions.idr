@@ -21,30 +21,18 @@ namespace MyContract
                   [ETHEREUM (Contract v b)]
   initContract v b = call $ Init v b
 
-  runContract : (v : Nat) -> (b : Nat) -> Eff ()
-                [ETHEREUM NotRunning]
-                [ETHEREUM (Contract 0 100)]
-  runContract v b = do
-    initContract 0 100
-    getBalance
-    return ()
 namespace User
   User : Type 
-  User = DepEff.Eff Nat
-                           [ETHEREUM NotRunning, STDIO]
-                           (\x => [ETHEREUM (Contract 10 100), STDIO])
+  User = Eff () [ETHEREUM NotRunning, STDIO]
   myProg : User 
   myProg = do
-    printLn "herp"
-    initContract 10 100
-    printLn "derp"
-    balance
-    --runPure $ runContract 5 9
+    initContract 0 100
+    printLn (show !(balance))
+    --save {p=refl} 0
+    printLn (show !(balance))
+    finish
 
 namespace Main
   main : IO ()
-  main = printLn $ show !( run myProg)
-    --printLn ("Original balance: " ++ (show !(getBalance)))
-    --printLn ("Original value: " ++ (show !(getValue)))
-    --printLn ("Balance after saving: " ++ (show !(saveAll)))
+  main = run myProg
 

@@ -11,6 +11,8 @@ import Ethereum
 es : Nat -> Nat -> EFFECT
 es v b = ETHEREUM (TheNumber v) (TheNumber b)
 
+
+
 namespace Contract
   Counter : {v: Nat} -> {b: Nat} -> Type -> Type
   --Counter {v} {b} rTy = Eff rTy ['es :- es v b] 
@@ -21,7 +23,8 @@ namespace Contract
   getBalance : Counter Nat
   getBalance = do
     b <- (balance)
-    save 0
+    --h <- (save {smaller=IsLte 18 19} 18)
+    h <- (save {smaller=LTEZero} 0)
     return b
 
   getValue : Counter Nat
