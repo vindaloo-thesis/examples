@@ -28,7 +28,7 @@ namespace User
   myProg = do
     initContract 0 100
     printLn (show !(balance))
-    --save {p=refl} 0
+    save 0
     printLn (show !(balance))
     finish
 
