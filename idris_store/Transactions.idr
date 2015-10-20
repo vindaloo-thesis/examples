@@ -8,31 +8,25 @@ import GeneralStore
 import Control.IOExcept
 import Ethereum
 
-namespace MyContract
-  MyContract : {v : Nat} -> {b : Nat} -> Type -> Type
-  MyContract {v} {b} rTy = TransEff.Eff rTy
-                           [ETHEREUM (Contract v b)]
-                           [ETHEREUM (Contract v b)]
-  getBalance : MyContract Nat
-  getBalance = return !(balance)
-
-  initContract : (v : Nat) -> (b : Nat) -> Eff ()
-                  [ETHEREUM NotRunning]
-                  [ETHEREUM (Contract v b)]
-  initContract v b = call $ Init v b
-
-namespace User
-  User : Type 
-  User = Eff () [ETHEREUM NotRunning, STDIO]
-  myProg : User 
-  myProg = do
-    initContract 0 100
+namespace TestContract
+  stash : IOContract
+  stash = do
+    init 11 100
     printLn (show !(balance))
-    save 0
+    save 9
+    save 1
+    save 1
     printLn (show !(balance))
     finish
 
+  implicitSave : Contract
+  implicitSave = do
+    init 100 200
+    finishAndSave
+
 namespace Main
   main : IO ()
-  main = run myProg
+  main = do
+    run stash
+    run implicitSave
 

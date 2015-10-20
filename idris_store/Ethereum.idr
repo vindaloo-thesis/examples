@@ -3,6 +3,8 @@ module Effects.Ethereum
 import Effects
 import Data.Fin
 import Data.So
+import Effect.StdIO
+
 import GeneralStore
 
 ------------ TYPES -----------------
@@ -10,76 +12,33 @@ import GeneralStore
 data Commit a = Comm a
 data Address = Addr Int
 
-------------- PROOF ----------------
-{-
-lte' : Nat -> Nat -> Type  
-lte' Z k         = ()      -- 0 ≤ k  
-lte' (S k) Z     = Void    -- ¬(k + 1 ≤ 0)  
-lte' (S k) (S l) = lte k l -- k ≤ l → k + 1 ≤ l + 1  
-
-
-LTEProof' : {m, n : Nat} -> {auto prf : lte' m n} -> LTE m n  
-LTEProof' {m=Z}   {n=k}         = LTEZero  
-LTEProof' {m=S k} {n=Z}   {prf} = absurd prf  
-LTEProof' {m=S k} {n=S l} {prf} = LTESucc $ LTEProof' {m=k} {n=l} {prf}  
--}
-IsLte : Ord e => (x:e) -> (y:e) -> Type
-IsLte x y = So (x <= y)
-
-
--------------- EXACTLY --------------
-data Exactly : Nat -> Type where
-  TheNumber : (n : Nat) -> Exactly n
-
-exactlyToNat : {n : Nat} -> Exactly n -> Nat
-exactlyToNat {n} (TheNumber n) = n
-
-fromExactly : Exactly n -> Fin (S n)
-fromExactly (TheNumber Z)     = FZ
-fromExactly (TheNumber (S n)) = FS (fromExactly (TheNumber n))
-
-(+) : {a : Nat} -> {b : Nat} -> Exactly a -> Exactly b -> Exactly (a+b)
-(+) {a} {b} _ _ = TheNumber (a+b)
-
-(-) : {a: Nat} -> {b: Nat} -> Exactly a -> Exactly b -> {auto smaller : LTE b a} -> Exactly (a-b)
-(-) {a} {b} _ _ = TheNumber (a-b)
-
-instance Default (Exactly n) where
-  default = TheNumber n
 
 -------------- EFFECT --------------
----- Ethereum return_type resource_in (r : return_type -> resource_out)
-data CState = NotRunning | Contract Nat Nat
-
-instance Default CState where
-  default = NotRunning
+data CState = NotRunning | Running Nat Nat
 
 data Ethereum : CState -> Type where
-  MkS : (value: Nat) -> (balance: Nat) -> Ethereum (Contract value balance)
+  MkS : (value: Nat) -> (balance: Nat) -> Ethereum (Running value balance)
   MkI : Ethereum NotRunning
-
-instance Default (Ethereum (Contract v b)) where
-  default {v} {b} = MkS v b
 
 instance Default (Ethereum NotRunning) where
   default = MkI
-
-initContract : (v : Nat) -> (b : Nat) -> Ethereum (Contract v b)
-initContract v b = MkS v b
 
 data EthereumRules : Effect where
   Init    : (v : Nat) -> (b : Nat) ->
             sig EthereumRules ()
             (Ethereum NotRunning)
-            (Ethereum (Contract v b))
+            (Ethereum (Running v b))
   Value   : sig EthereumRules Nat (Ethereum h)
   Balance : sig EthereumRules Nat (Ethereum h)
   Save    : (a : Nat) -> {auto p: LTE a v} ->
             sig EthereumRules ()
-            (Ethereum (Contract v b))
-            (Ethereum (Contract (v-a) (b+a)))
+            (Ethereum (Running v b))
+            (Ethereum (Running (v-a) (b+a)))
   Finish  : sig EthereumRules ()
-            (Ethereum (Contract v b)) --TODO: v should be 0
+            (Ethereum (Running 0 b))
+            (Ethereum NotRunning)
+  FinishSave : sig EthereumRules ()
+            (Ethereum (Running v b))
             (Ethereum NotRunning)
 
 ETHEREUM : CState -> EFFECT
@@ -91,16 +50,37 @@ instance Handler EthereumRules m where
   handle (MkS v b) Value k    = k v (MkS v b)
   handle (MkS v b) Balance k  = k b (MkS v b)
   handle (MkS v b) (Save a) k = k () (MkS (v-a) (b+a))
-  handle (MkS v b) Finish k   = k () MkI --TODO: v should be 0
+  handle (MkS Z b) Finish k   = k () MkI
+  handle (MkS v b) FinishSave k = k () MkI
 
-value : Eff Nat [ETHEREUM (Contract v b)]
+IOContract : Type
+IOContract = Eff () [ETHEREUM NotRunning, STDIO]
+
+Contract : Type
+Contract = Eff () [ETHEREUM NotRunning]
+
+init : (v : Nat) -> (b : Nat) -> Eff ()
+       [ETHEREUM NotRunning]
+       [ETHEREUM (Running v b)]
+init v b = call $ Init v b
+
+value : Eff Nat [ETHEREUM (Running v b)]
 value = call $ Value
 
-balance : Eff Nat [ETHEREUM (Contract v b)]
+balance : Eff Nat [ETHEREUM (Running v b)]
 balance = call $ Balance
 
-save : (a : Nat) -> {default proof { trivial; } p: LTE a v} -> Eff () [ETHEREUM (Contract v b)] [ETHEREUM (Contract (v-a) (b+a))]
+save : (a : Nat) -> {auto p: LTE a v} -> Eff ()
+       [ETHEREUM (Running v b)]
+       [ETHEREUM (Running (v-a) (b+a))]
 save a = call $ Save a
 
-finish : Eff () [ETHEREUM (Contract 0 b)] [ETHEREUM NotRunning]
+finishAndSave : Eff ()
+         [ETHEREUM (Running v b)]
+         [ETHEREUM NotRunning]
+finishAndSave = call FinishSave
+
+finish : Eff ()
+         [ETHEREUM (Running 0 b)]
+         [ETHEREUM NotRunning]
 finish = call Finish
