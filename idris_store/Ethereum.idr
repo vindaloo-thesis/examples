@@ -80,19 +80,25 @@ finish : Eff ()
          [ETHEREUM Finished]
 finish = call Finish
 
-IOContract : Nat -> Nat -> Type -> Type
-IOContract v b rTy = Eff rTy [ETHEREUM (Running v b), STDIO] [ETHEREUM Finished, STDIO]
+IOEtherContract : Nat -> Nat -> Type -> Type
+IOEtherContract v b rTy = Eff rTy [ETHEREUM (Running v b), STDIO] [ETHEREUM Finished, STDIO]
 
-Contract : Nat -> Nat -> Type -> Type
-Contract v b rTy = Eff rTy [ETHEREUM (Running v b)] [ETHEREUM Finished]
+EtherContract : Nat -> Nat -> Type -> Type
+EtherContract v b rTy = Eff rTy [ETHEREUM (Running v b)] [ETHEREUM Finished]
 
-runContract : (v : Nat) -> (b : Nat) -> Contract v b ()  -> IO ()
+Contract : Type -> Type
+Contract r = {v: Nat} -> {b: Nat} -> EtherContract v b r
+
+IOContract : Type -> Type
+IOContract r = {v: Nat} -> {b: Nat} -> IOEtherContract v b r
+
+runContract : (v : Nat) -> (b : Nat) -> EtherContract v b r -> IO r
 runContract v b c = run 
   (do (init v b)
       c
   )
 
-runIOContract : (v : Nat) -> (b : Nat) -> IOContract v b ()  -> IO ()
+runIOContract : (v : Nat) -> (b : Nat) -> IOEtherContract v b r -> IO r
 runIOContract v b c = runInit [MkS, ()] 
   (do (init v b)
       c

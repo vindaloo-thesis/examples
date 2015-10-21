@@ -10,15 +10,15 @@ import Ethereum
 
 namespace TestContract
 
-  implSave : {v: Nat} -> {b: Nat} -> IOContract v b () 
+  implSave : IOContract ()
   implSave = do
     printLn !value
     printLn !balance
     saveAndFinish
 
-  explSave : {v: Nat} -> {b: Nat} -> Contract v b () 
-  explSave {v} = do
-    v' <- value
+  explSave : Contract () 
+  explSave = do
+    v <- value
     save v --plz idris, LTE v v is trivial, no?
     finish
 
