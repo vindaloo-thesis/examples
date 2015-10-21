@@ -10,7 +10,7 @@ import GeneralStore
 ------------ TYPES -----------------
 
 data Commit a = Comm a
-data Address = Addr Int
+data Address = Addr Nat
 
 
 -------------- EFFECT --------------
@@ -31,12 +31,12 @@ data EthereumRules : Effect where
             (Ethereum (Running v b))
   Value   : sig EthereumRules Nat (Ethereum (Running v b))
   Balance : sig EthereumRules Nat (Ethereum (Running v b))
-  Save    : (a : Nat) -> {auto p: LTE a v} ->
-            sig EthereumRules ()
+  Save    : (a : Nat) ->
+            UpdateEffect.sig EthereumRules ()
             (Ethereum (Running v b))
-            (Ethereum (Running (v-a) (b+a)))
+            (Ethereum (Running (minus v a) (b+a)))
   Finish  : sig EthereumRules ()
-            (Ethereum (Running 0 b))
+            (Ethereum (Running Z b))
             (Ethereum Finished)
   FinishSave : sig EthereumRules ()
             (Ethereum (Running v b))
@@ -50,7 +50,7 @@ instance Handler EthereumRules m where
   handle MkS (Init v b) k      = k () (MkR v b)
   handle (MkR v b) Value k    = k v (MkR v b)
   handle (MkR v b) Balance k  = k b (MkR v b)
-  handle (MkR v b) (Save a) k = k () (MkR (v-a) (b+a))
+  handle (MkR v b) (Save a) k = k () (MkR (minus v a) (b+a))
   handle (MkR Z b) Finish k   = k () MkF
   handle (MkR v b) FinishSave k = k () MkF
 
@@ -65,10 +65,26 @@ value = call $ Value
 balance : Eff Nat [ETHEREUM (Running v b)]
 balance = call $ Balance
 
-save : (a : Nat) -> {auto p: LTE a v} -> Eff ()
+--save : (a : Nat) -> {v : Nat} -> {auto p: LTE a v} -> Eff ()
+save : (a : Nat) -> {v : Nat} -> {h: EFFECT} -> TransEff.Eff ()
+--save : (a : Nat) -> Eff ()
+-- save : (a : Nat) -> {auto p: LTE a v} -> Eff ()
+--save : (a : Nat) -> {default proof {trivial; } p: LTE a v} -> Eff ()
        [ETHEREUM (Running v b)]
-       [ETHEREUM (Running (v-a) (b+a))]
-save a = call $ Save a
+       --[ETHEREUM (if a <= v then (Running v' b') else Finished) ]
+       --[ETHEREUM (if a <= v then (Running (minus v a) (b+a)) else Finished) ]
+       [h]
+       {-
+       (\succ => if succ
+          then [ETHEREUM (Running (minus v a) (b+a))]
+          else [ETHEREUM Finished]
+          )
+          -}
+(Eff () [ETHEREUM (Running v b)] [ETHEREUM (Running (minus v a) (b+a))]) <== save = call $ Save a
+{-
+save a  = call (Save a)
+save a = call FinishSave
+-}
 
 saveAndFinish : Eff ()
          [ETHEREUM (Running v b)]
@@ -80,26 +96,36 @@ finish : Eff ()
          [ETHEREUM Finished]
 finish = call Finish
 
+
+Contract : Type -> Nat -> Nat -> Type
+Contract r v b = TransEff.Eff r [ETHEREUM (Running v b)] [ETHEREUM Finished]
+
+runContract : (v: Nat) -> (b: Nat) -> Contract r v b -> IO r
+runContract v b c = runInit [MkS] (do init v b; c)
+
+
+IOContract : Type -> Nat -> Nat -> Type
+IOContract r v b = TransEff.Eff r [ETHEREUM (Running v b), STDIO] [ETHEREUM Finished, STDIO]
+
+runIOContract : (v: Nat) -> (b: Nat) -> IOContract r v b -> IO r
+runIOContract v b c = runInit [MkS, ()] (do init v b; c)
+
+%hint
+lemmaMinus : (v : Nat) -> minus v v = 0
+lemmaMinus Z     = Refl
+lemmaMinus (S n) = lemmaMinus n
+
+
+{-
 IOEtherContract : Nat -> Nat -> Type -> Type
 IOEtherContract v b rTy = Eff rTy [ETHEREUM (Running v b), STDIO] [ETHEREUM Finished, STDIO]
 
-EtherContract : Nat -> Nat -> Type -> Type
-EtherContract v b rTy = Eff rTy [ETHEREUM (Running v b)] [ETHEREUM Finished]
-
-Contract : Type -> Type
-Contract r = {v: Nat} -> {b: Nat} -> EtherContract v b r
-
 IOContract : Type -> Type
 IOContract r = {v: Nat} -> {b: Nat} -> IOEtherContract v b r
-
-runContract : (v : Nat) -> (b : Nat) -> EtherContract v b r -> IO r
-runContract v b c = run 
-  (do (init v b)
-      c
-  )
 
 runIOContract : (v : Nat) -> (b : Nat) -> IOEtherContract v b r -> IO r
 runIOContract v b c = runInit [MkS, ()] 
   (do (init v b)
       c
   )
+  -}
