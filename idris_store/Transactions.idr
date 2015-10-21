@@ -9,22 +9,26 @@ import Control.IOExcept
 import Ethereum
 
 namespace TestContract
-  stash : Nat -> Nat -> IOContract ()
-  stash v b = do
-    init v b
+  stash : Contract ()
+  stash = do 
+    save 10
+    finish
+    {-
     printLn $ "v: " ++ show !value ++ ", b: " ++ show !balance
     save 400
     printLn $ "v: " ++ show !value ++ ", b: " ++ show !balance
-    finishAndSave
+    -}
 
+{-
   implicitSave : Contract ()
   implicitSave = do
     init 100 200
     finishAndSave
+    -}
 
 namespace Main
   main : IO ()
   main = do
-    run (stash 100 200)
-    run implicitSave
+    runInit [MkS 100 200] (stash {p=Refl})
+    --run implicitSave
 
