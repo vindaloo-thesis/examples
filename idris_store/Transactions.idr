@@ -16,18 +16,16 @@ namespace TestContract
     printLn !balance
     saveAndFinish
 
-{-
   explSave : Contract () 
   explSave = do
     v' <- value
     save v' --plz idris, LTE v v is trivial, no?
     finish
-    -}
 
 
 namespace Main
   main : IO ()
   main = do
     runIOContract 10 100 implSave
-    --runContract 100 100 explSave
+    runContract 100 100 explSave
 
