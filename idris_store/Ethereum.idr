@@ -28,8 +28,8 @@ data EthereumRules : Effect where
             sig EthereumRules ()
             (Ethereum NotRunning)
             (Ethereum (Running v b))
-  Value   : sig EthereumRules Nat (Ethereum h)
-  Balance : sig EthereumRules Nat (Ethereum h)
+  Value   : sig EthereumRules Nat (Ethereum (Running v b))
+  Balance : sig EthereumRules Nat (Ethereum (Running v b))
   Save    : (a : Nat) -> {auto p: LTE a v} ->
             sig EthereumRules ()
             (Ethereum (Running v b))
