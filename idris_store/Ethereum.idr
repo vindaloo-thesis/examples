@@ -53,11 +53,11 @@ instance Handler EthereumRules m where
   handle (MkS Z b) Finish k   = k () MkI
   handle (MkS v b) FinishSave k = k () MkI
 
-IOContract : Type
-IOContract = Eff () [ETHEREUM NotRunning, STDIO]
+IOContract : Type -> Type
+IOContract r = Eff r [ETHEREUM NotRunning, STDIO]
 
-Contract : Type
-Contract = Eff () [ETHEREUM NotRunning]
+Contract : Type -> Type
+Contract r = Eff r [ETHEREUM NotRunning]
 
 init : (v : Nat) -> (b : Nat) -> Eff ()
        [ETHEREUM NotRunning]

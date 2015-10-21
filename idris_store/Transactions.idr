@@ -9,7 +9,7 @@ import Control.IOExcept
 import Ethereum
 
 namespace TestContract
-  stash : IOContract
+  stash : IOContract ()
   stash = do
     init 11 100
     printLn (show !(balance))
@@ -19,7 +19,7 @@ namespace TestContract
     printLn (show !(balance))
     finish
 
-  implicitSave : Contract
+  implicitSave : Contract ()
   implicitSave = do
     init 100 200
     finishAndSave
