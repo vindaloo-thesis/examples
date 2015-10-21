@@ -28,7 +28,4 @@ istore2 = ["hejje", 123]
 
 main : IO ()
 main = putStrLn $ show ((head (tail (funcs store2))) istore2)
--- main = putStrLn (show (funcs store0))
---main = putStrLn (show (funcs store0 Refl))
---main = putStrLn (show (funcs store0 Refl))
 
