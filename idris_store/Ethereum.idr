@@ -30,10 +30,10 @@ data EthereumRules : Effect where
             (Ethereum (Running v b))
   Value   : sig EthereumRules Nat (Ethereum (Running v b))
   Balance : sig EthereumRules Nat (Ethereum (Running v b))
-  Save    : (a : Nat) -> {auto p: LTE a v} ->
+  Save    : (a : Nat) -> 
             sig EthereumRules ()
             (Ethereum (Running v b))
-            (Ethereum (Running (v-a) (b+a)))
+            (Ethereum (Running (minus v a) (b+a)))
   Finish  : sig EthereumRules ()
             (Ethereum (Running 0 b))
             (Ethereum NotRunning)
@@ -49,12 +49,12 @@ instance Handler EthereumRules m where
   handle MkI (Init v b) k      = k () (MkS v b)
   handle (MkS v b) Value k    = k v (MkS v b)
   handle (MkS v b) Balance k  = k b (MkS v b)
-  handle (MkS v b) (Save a) k = k () (MkS (v-a) (b+a))
+  handle (MkS v b) (Save a) k = k () (MkS (minus v a) (b+a))
   handle (MkS Z b) Finish k   = k () MkI
   handle (MkS v b) FinishSave k = k () MkI
 
 IOContract : Type -> Type
-IOContract r = Eff r [ETHEREUM NotRunning, STDIO]
+IOContract r = SimpleEff.Eff r [ETHEREUM NotRunning, STDIO]
 
 Contract : Type -> Type
 Contract r = Eff r [ETHEREUM NotRunning]
@@ -70,9 +70,9 @@ value = call $ Value
 balance : Eff Nat [ETHEREUM (Running v b)]
 balance = call $ Balance
 
-save : (a : Nat) -> {auto p: LTE a v} -> Eff ()
+save : (a : Nat) -> Eff ()
        [ETHEREUM (Running v b)]
-       [ETHEREUM (Running (v-a) (b+a))]
+       [ETHEREUM (Running (minus v a) (plus b a))]
 save a = call $ Save a
 
 finishAndSave : Eff ()
