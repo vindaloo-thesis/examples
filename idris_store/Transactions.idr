@@ -18,14 +18,14 @@ namespace TestContract
 
   explSave : {v: Nat} -> {b: Nat} -> Contract v b () 
   explSave {v} = do
-    --v <- value
-    --save v
-    saveAndFinish
+    v' <- value
+    save v --plz idris, LTE v v is trivial, no?
+    finish
 
 
 namespace Main
   main : IO ()
   main = do
     runIOContract 10 100 implSave
-    --runContract 100 100 explSave
+    runContract 100 100 explSave
 
