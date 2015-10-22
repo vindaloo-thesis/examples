@@ -3,6 +3,7 @@ module GeneralStore
 import Data.Vect
 import Data.HVect
 import Data.Vect.Quantifiers
+import Data.BoundedList
 
 -- Missing head, tail function for HVect
 head : HVect (t::ts) -> t
@@ -11,11 +12,13 @@ head (x::_) = x
 tail : HVect (t::ts) -> HVect ts
 tail (_::xs) = xs
 
-data Field = EInt | EString 
+data Field = EInt | EString | EAddress | EArray Nat Field
 
 interpField : Field -> Type
 interpField EInt = Int
 interpField EString = String
+interpField EAddress = String
+interpField (EArray n f) = BoundedList n Field
 
 --Schema definition
 Store : Nat -> Type
