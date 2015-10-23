@@ -10,11 +10,13 @@ import GeneralStore
 ------------ TYPES -----------------
 
 data Commit a = Comm a
-data Address = Addr Int
+data Address = Addr String
 
 
 -------------- EFFECT --------------
 data CState = NotRunning | Running Nat Nat Nat Nat | Finished Nat Nat
+Init : Nat -> Nat -> CState
+Init v b = Running v b 0 0
 
 data Ethereum : CState -> Type where
   MkS : (value: Nat) -> (balance: Nat) -> (trans: Nat) -> (saved: Nat) -> Ethereum (Running value balance trans saved)
@@ -25,6 +27,8 @@ instance Default (Ethereum NotRunning) where
   default = MkI
 
 data EthereumRules : Effect where
+  Value   : sig EthereumRules Nat
+            (Ethereum (Running v b t s))
   Save    : (a : Nat) -> 
             sig EthereumRules ()
             (Ethereum (Running v b t s))
@@ -42,9 +46,14 @@ ETHEREUM h = MkEff (Ethereum h) EthereumRules
 
 -- k result_value updated_resource
 instance Handler EthereumRules m where
+  handle (MkS v b t s) Value k = k v (MkS v b t s)
   handle (MkS v b t s) (Save a) k = k () (MkS v b t (s+a))
   handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
   handle (MkS v b t s) (Finish) k = k () (MkF t s)
+
+value : Eff Nat
+       [ETHEREUM (Running v b t s)]
+value = call $ Value
 
 save : (a : Nat) -> Eff ()
        [ETHEREUM (Running v b t s)]
