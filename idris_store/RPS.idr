@@ -14,6 +14,8 @@ store = [EArray 2 EAddress, EArray 2 EInt, EInt, EInt]
 Contract : (x : Type) -> (ce : x -> List EFFECT) -> Type
 Contract x ce = {m : Type -> Type} -> {b : Nat} -> {v : Nat} -> EffM m x [ETHEREUM (Init v b)] ce
 
+-- runContract : Applicative m => (v : Nat) -> (c : Contract x ce) -> m x
+-- runContract v c = runInit [Running 100 100 0 0] c
 namespace TestContract
   playerChoice : Int -> {n : Nat} -> (v : Nat) -> Contract Bool
                           (\succ => if succ
@@ -43,11 +45,14 @@ namespace TestContract
         --    return True
        else (do save (S n); send (S n); return False)
                 -}
-
 namespace Main
   main : IO ()
   main = do
     printLn "Running stuff"
-    --runInit [MkS 100 200] (stash {p=Refl})
+    --runPureInit [(), Ethereum (Running 100 100 0 0)] (playerChoice 1 100)
+    runInit [()] (playerChoice 1 100)
+    --runInit [(), Ethereum (Running 100 100 0 0)] (playerChoice 1 100)
+    --runInit [()] (playerChoice 1 100)
+    return ()
     --run implicitSave
 
