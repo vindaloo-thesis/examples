@@ -11,11 +11,11 @@ import Ethereum
 store : Store 4
 store = [EArray 2 EAddress, EArray 2 EInt, EInt, EInt]
 
-Contract : (x : Type) -> (v : Nat) -> (ce : x -> List EFFECT) -> Type
-Contract x v ce = {m : Type -> Type} -> {b : Nat} -> EffM m x [ETHEREUM (Init v b)] ce
+Contract : (x : Type) -> (ce : x -> List EFFECT) -> Type
+Contract x ce = {m : Type -> Type} -> {b : Nat} -> {v : Nat} -> EffM m x [ETHEREUM (Init v b)] ce
 
 namespace TestContract
-  playerChoice : Int -> {n : Nat} -> (v : Nat) -> Contract Bool v
+  playerChoice : Int -> {n : Nat} -> (v : Nat) -> Contract Bool
                           (\succ => if succ
                           then [ETHEREUM (Finished n 1)]
                           else [ETHEREUM (Finished v 0)])
