@@ -44,7 +44,7 @@ ETHEREUM h = MkEff (Ethereum h) EthereumRules
 instance Handler EthereumRules m where
   handle (MkS v b t s) (Save a) k = k () (MkS v b t (s+a))
   handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
-  handle (MkS v b t s) Finish k   = k () (MkF t s)
+  handle (MkS v b t s) (Finish) k = k () (MkF t s)
 
 save : (a : Nat) -> Eff ()
        [ETHEREUM (Running v b t s)]
@@ -56,7 +56,11 @@ send : (a : Nat) -> Eff ()
        [ETHEREUM (Running v b (plus t a) s)]
 send a = call $ Send a
 
+--TODO: Wrap pureM here too. Doesn't seem to work right now.
+--finish ret = call (Finish ret) >>= (\_ => pureM ret)
+
 finish : Eff ()
          [ETHEREUM (Running v b t s)]
          [ETHEREUM (Finished t s)]
 finish = call Finish
+
