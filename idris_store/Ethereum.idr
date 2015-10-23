@@ -14,79 +14,49 @@ data Address = Addr Int
 
 
 -------------- EFFECT --------------
-data CState = NotRunning | Running Nat Nat Nat | Finished Nat
+data CState = NotRunning | Running Nat Nat Nat Nat | Finished Nat Nat
 
 data Ethereum : CState -> Type where
-  MkS : (value: Nat) -> (balance: Nat) -> (out: Nat) -> Ethereum (Running value balance out)
+  MkS : (value: Nat) -> (balance: Nat) -> (trans: Nat) -> (saved: Nat) -> Ethereum (Running value balance trans saved)
   MkI : Ethereum NotRunning
-  MkF : (net: Nat) -> Ethereum (Finished net)
+  MkF : (trans: Nat) -> (saved: Nat) -> Ethereum (Finished trans saved)
 
 instance Default (Ethereum NotRunning) where
   default = MkI
 
 data EthereumRules : Effect where
-  Init    : (v : Nat) -> (b : Nat) ->
-            sig EthereumRules ()
-            (Ethereum NotRunning)
-            (Ethereum (Running v b 0))
-  Value   : sig EthereumRules Nat (Ethereum (Running v b t))
-  Balance : sig EthereumRules Nat (Ethereum (Running v b t))
   Save    : (a : Nat) -> 
             sig EthereumRules ()
-            (Ethereum (Running v b t))
-            (Ethereum (Running (minus v a) (b+a) t))
+            (Ethereum (Running v b t s))
+            (Ethereum (Running v b t (s+a)))
   Send    : (a : Nat) ->
             sig EthereumRules ()
-            (Ethereum (Running v b t))
-            (Ethereum (Running v (minus b a) (t+a)))
+            (Ethereum (Running v b t s))
+            (Ethereum (Running v b (t+a) s))
   Finish  : sig EthereumRules ()
-            (Ethereum (Running v b t))
-            (Ethereum (Finished t))
+            (Ethereum (Running v b t s))
+            (Ethereum (Finished t s))
 
 ETHEREUM : CState -> EFFECT
 ETHEREUM h = MkEff (Ethereum h) EthereumRules
 
 -- k result_value updated_resource
 instance Handler EthereumRules m where
-  handle MkI (Init v b) k      = k () (MkS v b 0)
-  handle (MkS v b t) Value k    = k v (MkS v b t)
-  handle (MkS v b t) Balance k  = k b (MkS v b t)
-  handle (MkS v b t) (Save a) k = k () (MkS (minus v a) (b+a) t)
-  handle (MkS v b t) (Send a) k = k () (MkS v (minus b a) (t+a))
-  handle (MkS v b t) Finish k   = k () (MkF t)
-
-IOContract : Type -> Type
-IOContract r = {v: Nat} -> {b: Nat} -> {t : Nat } -> TransEff.Eff r [ETHEREUM (Running v b t), STDIO]
-                               [ETHEREUM (Finished t), STDIO]
-
-Contract : Type -> Type
-Contract r = {v: Nat} -> {b: Nat} -> {t : Nat} -> TransEff.Eff r [ETHEREUM (Running v b t)]
-                               [ETHEREUM (Finished t)]
-
-{-
-init : (v : Nat) -> (b : Nat) -> Eff ()
-       [ETHEREUM NotRunning]
-       [ETHEREUM (Running v b)]
-init v b = call $ Init v b
--}
-
-value : Eff Nat [ETHEREUM (Running v b t)]
-value = call $ Value
-
-balance : Eff Nat [ETHEREUM (Running v b t)]
-balance = call $ Balance
+  handle (MkS v b t s) (Save a) k = k () (MkS v b t (s+a))
+  handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
+  handle (MkS v b t s) Finish k   = k () (MkF t s)
 
 save : (a : Nat) -> Eff ()
-       [ETHEREUM (Running v b t)]
-       [ETHEREUM (Running (minus v a) (plus b a) t)]
+       [ETHEREUM (Running v b t s)]
+       [ETHEREUM (Running v b t (s+a))]
 save a = call $ Save a
 
 send : (a : Nat) -> Eff ()
-       [ETHEREUM (Running v b t)]
-       [ETHEREUM (Running v (minus b a) (plus t a))]
+       [ETHEREUM (Running v b t s)]
+       [ETHEREUM (Running v b (plus t a) s)]
 send a = call $ Send a
 
 finish : Eff ()
-         [ETHEREUM (Running v b t)]
-         [ETHEREUM (Finished t)]
+         [ETHEREUM (Running v b t s)]
+         [ETHEREUM (Finished t s)]
 finish = call Finish
