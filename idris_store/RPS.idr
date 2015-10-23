@@ -11,37 +11,31 @@ import Ethereum
 store : Store 4
 store = [EArray 2 EAddress, EArray 2 EInt, EInt, EInt]
 
+Contract : (x : Type) -> (ce : x -> List EFFECT) -> Nat -> Type
+Contract x ce v = {m : Type -> Type} -> {b : Nat} -> EffM m x [ETHEREUM (Init v b)] ce
 
 namespace TestContract
-  playerChoice : Int -> Eff Bool [ETHEREUM (Running (1+n) b 0 0)]
+  playerChoice : Int -> {n : Nat} -> (v : Nat) -> Contract Bool 
                           (\succ => if succ
                           then [ETHEREUM (Finished n 1)]
-                          else [ETHEREUM (Finished (1+n) 0)])
-  playerChoice c {n} = if c < 1 
-    then do
-      send n
-      save 1
-      finish
-      pureM True
-    else do
-      send (S n)
-      finish
-      pureM False
-    {-
-
-    do
-    let succ = c < 1
-    if succ then do
+                          else [ETHEREUM (Finished v 0)]) v
+  {-
+  playerChoice : Int -> {n : Nat} -> (v: Nat) -> Eff Bool [ETHEREUM (Init v b)]
+                          (\succ => if succ
+                          then [ETHEREUM (Finished n 1)]
+                          else [ETHEREUM (Finished v 0)])
+                          -}
+  playerChoice c v {n} = do
+    if c < 1 -- !(read pc) < 1 
+      then do
         send n
         save 1
-        return succ
-    else do
-      send (S n)
-      return succ
-      -}
-
-
-
+        finish
+        pureM True
+      else do
+        send v
+        finish
+        pureM False
 
     --pc <- read playerCount
             {-
