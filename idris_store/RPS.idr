@@ -11,30 +11,25 @@ import Ethereum
 store : Store 4
 store = [EArray 2 EAddress, EArray 2 EInt, EInt, EInt]
 
---((players, choices, playerCount, reward)) = funcs store
-derp : minus (plus b (S n)) n = S b
-derp = ?derp_rhs
 
 namespace TestContract
-  playerFail : Int -> TransEff.Eff Bool [ETHEREUM (Running (S n) b 0 0)]
-                          [ETHEREUM (Running (S n) b (S n) 0)]
-  playerFail c {n} = do
-    send (S n)
-    return False
-
-  playerSucc : Int -> TransEff.Eff Bool [ETHEREUM (Running (S n) b 0 0)]
-                          [ETHEREUM (Running (S n) b n 1)]
-  playerSucc c {n} = do
-    send n
-    save 1
-    return True
-
-  playerChoice : Int -> DepEff.Eff Bool [ETHEREUM (Running (S n) b 0 0)]
+  playerChoice : Int -> Eff Bool [ETHEREUM (Running (1+n) b 0 0)]
                           (\succ => if succ
+                          then [ETHEREUM (Finished n 1)]
+                          else [ETHEREUM (Finished (1+n) 0)])
+  playerChoice c {n} = if c < 1 
+    then do
+      send n
+      save 1
+      finish
+      pureM True
+    else do
+      send (S n)
+      finish
+      pureM False
+    {-
 
-                          then [ETHEREUM (Running (S n) b n 1)]
-                          else [ETHEREUM (Running (S n) b (S n) 0)])
-  playerChoice c {n} = do
+    do
     let succ = c < 1
     if succ then do
         send n
@@ -43,6 +38,7 @@ namespace TestContract
     else do
       send (S n)
       return succ
+      -}
 
 
 
@@ -51,9 +47,9 @@ namespace TestContract
             {-
     if pc < 2
        then ( do save 1; send n; return True)
-         --write reward $ (!get reward) + 1
-         --write players pc !sender
-         --write choices pc c
+         --write reward $ (!read reward ) + 1
+         --write (players pc) !sender
+         --write (choices pc) c
          --write playerCount (pc + 1)
          --   save 1
         --    return True
