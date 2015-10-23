@@ -4,11 +4,11 @@ import Effects
 import Data.Fin
 import Data.So
 import Effect.StdIO
+import EVM
 
 import GeneralStore
 
 ------------ TYPES -----------------
-
 data Commit a = Comm a
 data Address = Addr String
 
@@ -25,6 +25,9 @@ data Ethereum : CState -> Type where
 
 instance Default (Ethereum NotRunning) where
   default = MkI
+
+instance Default (Ethereum (Running v b 0 0)) where
+  default {v} {b} = MkS v b 0 0 
 
 data EthereumRules : Effect where
   Value   : sig EthereumRules Nat
@@ -45,7 +48,13 @@ ETHEREUM : CState -> EFFECT
 ETHEREUM h = MkEff (Ethereum h) EthereumRules
 
 -- k result_value updated_resource
-instance Handler EthereumRules m where
+instance Handler EthereumRules IO where
+  handle (MkS v b t s) Value k = k v (MkS v b t s)
+  handle (MkS v b t s) (Save a) k = do printLn ("Saved " ++ show v); k () (MkS v b t (s+a))
+  handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
+  handle (MkS v b t s) (Finish) k = k () (MkF t s)
+
+instance Handler EthereumRules EVM where
   handle (MkS v b t s) Value k = k v (MkS v b t s)
   handle (MkS v b t s) (Save a) k = k () (MkS v b t (s+a))
   handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
