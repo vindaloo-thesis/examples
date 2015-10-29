@@ -1,49 +1,56 @@
 module Store
 
+import Data.HVect
 import Effects
 import Effect.StdIO
 
-Ident : Type
-Ident = String
+data Map : Type -> Type -> Type where
+  Empty : Map k v
+  Bin   : k -> v -> Map k v -> Map k v -> Map k v
 
-Location : Type
-Location = String
+Ident : Type -> Type
+Ident t = String
 
-Value : Type
-Value = String
+Field : Type -> Type 
+Field t = String
 
-AddressMap : Type
-AddressMap = List (Ident,(Location,Type))
+Environment : Vect n Type -> Type
+Environment ts = HVect (map Field ts)
 
 data Store : Effect where
-  Read  : Ident -> sig Store Value AddressMap
-  Write : Ident -> Value -> sig Store () AddressMap
+  Read  : Field t -> sig Store t (Environment ts)
+  Write : Field t -> t -> sig Store () (Environment ts)
 
-STORE : EFFECT
-STORE = MkEff AddressMap Store
+STORE : Vect n Type -> EFFECT
+STORE ts = MkEff (Environment ts) Store
+
+read : Ident t -> Eff t [STORE ts]
+read ident = call (Read ident)
+
+write : Ident t -> t -> Eff () [STORE ts]
+write ident value = call (Write ident value)
+
+toString : Ident t -> String
+toString = id
+
+toIdent : String -> Ident t
+toIdent = id
 
 instance Handler Store IO where
-  handle s (Read ident)      k = case lookup ident s of
-                                    Nothing  => k "" s
-                                    Just loc => do
-                                      h <- openFile loc Read
+  handle s (Read field)      k = do
+                                      h <- openFile (toString field) Read
                                       val <- fread h
                                       closeFile h
-                                      k val s
-  handle s (Write ident val) k = case lookup ident s of
-                                    Nothing  => k () s
-                                    Just loc => do
-                                      h <- openFile loc Write
-                                      fwrite h val
+                                      k (deserialize val) s
+  handle s (Write field val) k = do
+                                      h <- openFile (toString field) Write
+                                      fwrite h (serialize val)
                                       closeFile h
                                       k () s
 
-read : Ident -> Eff Value [STORE]
-read ident = call (Read ident)
 
-write : Ident -> Value -> Eff () [STORE]
-write ident value = call (Write ident value)
 
-testRead : SimpleEff.Eff () [STORE,STDIO]
-testRead = putStrLn !(read "players")
+
+
+
 
