@@ -4,15 +4,31 @@ import Effects
 import Effect.State
 import Effect.StdIO
 import Ethereum
+import Data.Vect
+import Data.HVect
+import Types
+import GeneralStore
+
+playerCount : Field
+playerCount = EInt 0
+
+reward : Field
+reward = EInt 1
+
+store : Schema 2
+store = [playerCount, reward]
 
 namespace TestContract
   playerChoice : Int -> { auto p : LTE 10 v } ->
-                 DepEff.Eff Bool [ETH_IN v] (resultEffect [ETH_OUT (v-10) 10] [ETH_OUT v 0])
-  playerChoice {v} c =
-    if c < 1 -- !(read pc) < 1 
+                 Eff Bool [ETH_IN v, STORE 2] (resultEffect [ETH_OUT (v-10) 10, STORE 2] [ETH_OUT v 0, STORE 2])
+  playerChoice {v} c = do
+    pc <- read playerCount
+    if pc < 2
       then do
-        send (v-10) "sender"
         save 10
+        write reward (!(read reward)+10)
+        write playerCount (pc+1)
+        send (v-10) "sender"
         finish
         pureM True
       else do
@@ -32,16 +48,9 @@ namespace TestContract
         finish
         pureM False
 
-
---  runContract : Nat -> Nat -> Contract () ce -> 
---  runContract c = do
---    xx <- runInit [MkS 1 100 0 0] (playerChoice 0 100)
---    pureM ()
-
-
 namespace Main
   main : IO ()
   main = do
-    res <- runInit [MkS 10 0 0] (playerChoice 0)
+    res <- runInit [MkS 10 0 0, store] (playerChoice 0)
     putStrLn . show $ res
 

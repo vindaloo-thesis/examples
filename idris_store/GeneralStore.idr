@@ -31,6 +31,8 @@ serialize (EInt _)  = show
 serialize (EString _) = id
 serialize (EAddress _) = id
 
+
+-- TODO: Error handler for when files don't exist
 instance Handler Store IO where
   handle s (Read field)     k =
     do

@@ -21,6 +21,7 @@ head (x::_) = x
 tail : HVect (t::ts) -> HVect ts
 tail (_::xs) = xs
 
+-- TODO: Lists, maps
 -- parameter: index
 data Field = EInt Nat | EString Nat | EAddress Nat 
 
