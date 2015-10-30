@@ -50,8 +50,8 @@ namespace Ethereum
 namespace TestContract
   stash : TransEff.Eff () [ETHEREUM (Running v b (v+b))] 
                           [ETHEREUM (Finished (v+b))]
-  stash = do 
-    save !value
+  stash {v} = do 
+    save v
     finish
 
 {-
