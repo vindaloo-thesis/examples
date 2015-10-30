@@ -9,11 +9,11 @@ import Types
 
 
 data Store : Effect where
-  Read  : (f : Field) -> sig Store (interpField f) (interp ts)
-  Write : (f : Field) -> (interpField f) -> sig Store () (interp ts)
+  Read  : (f : Field) -> sig Store (interpField f) (Schema k)
+  Write : (f : Field) -> (interpField f) -> sig Store () (Schema k)
 
-STORE : (Schema k) -> EFFECT
-STORE ts = MkEff (interp ts) Store
+STORE : Nat -> EFFECT
+STORE k = MkEff (Schema k) Store
 
 read : (f : Field) -> Eff (interpField f) [STORE ts]
 read f = call $ Read f
@@ -37,7 +37,7 @@ instance Handler Store IO where
       h <- openFile (show field) Read
       val <- fread h
       closeFile h
-      k (deserialize field val) s
+      k (deserialize field (trim val)) s
 
   handle s (Write field val) k =
     do
