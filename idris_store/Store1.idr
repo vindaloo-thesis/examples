@@ -19,11 +19,26 @@ data Map : Type -> Type -> Type where
 Ident : Serialize t => (t:Type) -> Type
 Ident t = String
 
-Field : Type -> Type 
+Field : Serialize t => (t:Type) -> Type 
 Field t = String
 
-Environment : Vect n Type -> Type
-Environment ts = HVect (map Field ts)
+class Serializes (k : Nat) (ts : Vect k Type) where
+  serializes : Vect k Type -> Type  --Vect k String
+
+instance Serializes Z [] where
+  serializes [] = HVect []
+
+instance (Serialize t, Serializes k ts) => Serializes (S k) (t::ts) where
+  --serializes (x::xs) = HVect (x :: xs)
+  serializes (x::xs) = ?ghuyg --HVect xs
+
+--instance (Serializes k ts) => Serialize (Vect k Type) where
+--  serialize xs = ?ks --"[" ++ (pack . intercalate [','] . map unpack . toList $ serializes xs) ++ "]"
+
+Environment : Serializes n ts => (ts: Vect n Type) -> Type
+Environment  []     = HVect []
+Environment (t ::ts) = (Data.HVect.::) (Field t) (Environment ts)
+--Environment ts = HVect (map Field ts)
 
 data Store : Effect where
   Read  : Serialize t => Field t -> sig Store t (Environment ts)
@@ -33,7 +48,9 @@ STORE : Vect n Type -> EFFECT
 STORE ts = MkEff (Environment ts) Store
 
 --read : Serialize t => Ident t -> Eff t [STORE ts]
+read : Serialize t => Ident t -> String
 --read ident = call (Read ident)
+read = ?read
 
 --write : Show t => Ident t -> t -> Eff () [STORE ts]
 --write ident value = call (Write ident value)

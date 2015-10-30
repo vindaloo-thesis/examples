@@ -1,51 +1,57 @@
 module GeneralStore
 
+import Effects
+import Effect.StdIO
 import Data.Vect
 import Data.HVect
 import Data.Vect.Quantifiers
-import Data.BoundedList
+import Types
 
--- Missing head, tail function for HVect
-head : HVect (t::ts) -> t
-head (x::_) = x
 
-tail : HVect (t::ts) -> HVect ts
-tail (_::xs) = xs
+data Store : Effect where
+  Read  : (f: Field) -> NoUpdateEffect.sig Store (interpField f) (interp ts)
+--  Write : Show t => Field t -> t -> sig Store () (Environment ts)
 
-data Field = EInt | EString | EAddress | EArray Nat Field
+STORE : (Schema k) -> EFFECT
+STORE ts = MkEff (interp ts) Store
 
-interpField : Field -> Type
-interpField EInt = Int
-interpField EString = String
-interpField EAddress = String
-interpField (EArray n f) = BoundedList n Field
+read : (f : Field) -> Eff (interpField f) [STORE ts]
+read f = call $ Read f
 
---Schema definition
-Store : Nat -> Type
-Store k = Vect k Field
+--write : Show t => Ident t -> t -> Eff () [STORE ts]
+--write ident value = call (Write ident value)
 
-gStore : {ts: Vect n Type} -> Type
-gStore {ts}  = HVect ts
+deserialize : (f : Field) -> String -> (interpField f)
+deserialize (EInt _)  = prim__fromStrInt 
+deserialize (EString _) = id
+deserialize (EAddress _) = id
 
--- Interpretation function: takes Store and creates type
-interp : Store k -> Type
-interp store = HVect (map interpField store)
+instance Handler Store IO where
+  handle s (Read field)     k =
+    do
+      h <- openFile (show field) Read
+      val <- fread h
+      closeFile h
+      --k (cast val) s
+      k (deserialize field val) s
 
-extends : All (\t => HVect ts -> t) us -> All (\t => HVect (u :: ts) -> t) us
-extends []        = []
-extends (f :: fs) = (f . tail) :: extends fs
+{-
+  handle s (Write field val) {t} k =
+    do
+      h <- openFile (toString {t} field) Write
+      fwrite h (show val)
+      closeFile h
+      k () s
+      pureM ()
+      -}
 
-funcs' : (ts : Vect n Type) -> All (\t => HVect ts -> t) ts
-funcs' []        = []
-funcs' (x :: xs) = head :: extends (funcs' xs)
 
-allToHVect : All p xs -> HVect (map p xs)
-allToHVect []        = []
-allToHVect (x :: xs) = x :: allToHVect xs
 
-mapMapMap : (f : b -> c) -> (g : a -> b) -> (xs : Vect n a) -> map f (map g xs) = map (f . g) xs
-mapMapMap f g []        = Refl
-mapMapMap f g (x :: xs) = cong $ mapMapMap f g xs
 
-funcs : (fs : Store n) -> HVect (map (\f => interp fs -> interpField f) fs)
-funcs fs = rewrite sym $ mapMapMap (\t => interp fs -> t) interpField fs in allToHVect $ funcs' $ map interpField fs
+
+
+
+
+
+
+
