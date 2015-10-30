@@ -1,38 +1,59 @@
-module Store
+module GeneralStore
 
+import Effects
+import Effect.StdIO
 import Data.Vect
 import Data.HVect
+import Data.Vect.Quantifiers
+import Types
 
--- Missing head, tail function for HVect
-head : HVect (t::ts) -> t
-head (x::_) = x
 
-tail : HVect (t::ts) -> HVect ts
-tail (_::xs) = xs
+data Store : Effect where
+  Read  : (f : Field) -> sig Store (interpField f) (Schema k)
+  Write : (f : Field) -> (interpField f) -> sig Store () (Schema k)
 
-data Field = EInt | EString 
+STORE : Nat -> EFFECT
+STORE k = MkEff (Schema k) Store
 
-interpField : Field -> Type
-interpField EInt = Int
-interpField EString = String
+read : (f : Field) -> Eff (interpField f) [STORE ts]
+read f = call $ Read f
 
---Schema definition
-Store : Nat -> Type
-Store k = Vect k Field
+write : (f : Field) -> (interpField f) -> Eff () [STORE ts]
+write f x = call (Write f x)
 
--- Interpretation function: takes Store and creates type
-interp : Store k -> Type
-interp store = HVect (map interpField store)
+deserialize : (f : Field) -> String -> interpField f
+deserialize (EInt _)  = prim__fromStrInt 
+deserialize (EString _) = id
+deserialize (EAddress _) = id
 
--- See GeneralStore for failed unification experiment
-funcs0 : (fs : Vect 0 Field) -> HVect []
-funcs0 _    = []
+serialize : (f : Field) -> interpField f -> String
+serialize (EInt _)  = show
+serialize (EString _) = id
+serialize (EAddress _) = id
 
-funcs1 : (fs : Vect 1 Field) -> HVect [HVect [interpField (head fs)] -> interpField (head fs)]
-funcs1 _    = [head]
 
-funcs2 : (fs : Vect 2 Field) -> HVect [
-  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head fs))),
-  (HVect [interpField (head fs), interpField (head (tail fs))] -> (interpField (head (tail fs))))]
-funcs2 _ = [head, index 1]
+-- TODO: Error handler for when files don't exist
+instance Handler Store IO where
+  handle s (Read field)     k =
+    do
+      h <- openFile (show field) Read
+      val <- fread h
+      closeFile h
+      k (deserialize field (trim val)) s
+
+  handle s (Write field val) k =
+    do
+      h <- openFile (show field) Write
+      fwrite h (serialize field val)
+      closeFile h
+      k () s
+
+
+
+
+
+
+
+
+
 

@@ -4,16 +4,6 @@ import Data.Vect
 import Data.HVect
 import Data.Vect.Quantifiers
 
-{-
-class Serialize t where
-  deserialize : String -> t
-  serialize   : t -> String
-
-instance Serialize String where
-  deserialize = id
-  serialize   = id
--}
-
 -- Missing head, tail function for HVect
 head : HVect (t::ts) -> t
 head (x::_) = x
