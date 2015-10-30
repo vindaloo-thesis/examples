@@ -12,34 +12,38 @@ import Ethereum
 -- runContract : Applicative m => (v : Nat) -> (c : Contract x ce) -> m x
 -- runContract v c = runInit [Running 100 100 0 0] c
 namespace TestContract
-  playerChoice : Int -> {n : Nat} -> (v : Nat) -> Contract Bool
+  playerChoice : Int -> (v : Nat) -> {auto p : LTE 10 v} -> Contract Bool
                           (\succ => if succ
-                          then [ETHEREUM (Finished n 1)]
+                          then [ETHEREUM (Finished (v-10) 10)]
                           else [ETHEREUM (Finished v 0)])
-  playerChoice c v {n} = do
+  playerChoice c v = do
     if c < 1 -- !(read pc) < 1 
       then do
-        send n "sender"
-        save 1
+        send (v-10) "sender"
+        save 10
         finish
         pureM True
       else do
         send v "sender"
         finish
         pureM False
-
+{-
   runContract : Contract () ce
   runContract = do
-    xx <- runInit [Running 1 100 0 0]  (playerChoice 1 100)
+    xx <- runInit [MkS 1 100 0 0]  (playerChoice 1 100)
     pureM ()
+-}
+
 namespace Main
   main : IO ()
-  --main = runInit [["XYZ"]] (playerChoice 1 100)
+  main = do
+    res <- runInit [MkS 1 100 0 0] (playerChoice 1 100)
+    putStrLn . show $ res
     --runInit [()] (playerChoice 1 100)
     
     --runInit [(), Ethereum (Running 100 100 0 0)] (playerChoice 1 100)
     --runInit [()] (playerChoice 1 100)
-  main = printLn "ss"
+  -- main = printLn "ss"
     --return ()
     --run implicitSave
 
