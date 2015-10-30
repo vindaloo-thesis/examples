@@ -37,7 +37,7 @@ namespace TestContract
 namespace Main
   main : IO ()
   main = do
-    res <- runInit [MkS 1 100 0 0] (playerChoice 1 100)
+    res <- runInit [MkS 1 100 0 0] (playerChoice 0 100)
     putStrLn . show $ res
     --runInit [()] (playerChoice 1 100)
     
