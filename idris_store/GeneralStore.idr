@@ -32,7 +32,6 @@ instance Handler Store IO where
       h <- openFile (show field) Read
       val <- fread h
       closeFile h
-      --k (cast val) s
       k (deserialize field val) s
 
 {-
