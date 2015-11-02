@@ -13,7 +13,7 @@ tail (_::xs) = xs
 
 -- TODO: Lists, maps
 -- parameter: index
-data Field = EInt Nat | EString Nat | EAddress Nat 
+data Field = EInt Nat | EString Nat | EAddress Nat | EArray Nat
 
 instance Show Field where
   show (EInt n)     = "EINT_" ++ show n
@@ -33,31 +33,3 @@ InterpField (EAddress _) = String
 Interp : Schema k -> Type
 Interp schema = HVect (map InterpField schema)
 
-
-{-
-
-
-
-
-
-------------FUNCS-------------
-
-extends : All (\t => HVect ts -> t) us -> All (\t => HVect (u :: ts) -> t) us
-extends []        = []
-extends (f :: fs) = (f . tail) :: extends fs
-
-funcs' : (ts : Vect n Type) -> All (\t => HVect ts -> t) ts
-funcs' []        = []
-funcs' (x :: xs) = head :: extends (funcs' xs)
-
-allToHVect : All p xs -> HVect (map p xs)
-allToHVect []        = []
-allToHVect (x :: xs) = x :: allToHVect xs
-
-mapMapMap : (f : b -> c) -> (g : a -> b) -> (xs : Vect n a) -> map f (map g xs) = map (f . g) xs
-mapMapMap f g []        = Refl
-mapMapMap f g (x :: xs) = cong $ mapMapMap f g xs
-
-funcs : (fs : Schema n) -> HVect (map (\f => interp fs -> interpField f) fs)
-funcs fs = rewrite sym $ mapMapMap (\t => interp fs -> t) interpField fs in allToHVect $ funcs' $ map interpField fs
--}
