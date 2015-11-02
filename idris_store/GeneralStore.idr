@@ -8,16 +8,16 @@ import Types
 
 
 data Store : Effect where
-  Read  : (f : Field) -> sig Store (InterpField f) (Interp s)
-  Write : (f : Field) -> (InterpField f) -> sig Store () (Interp s)
+  Read  : (f : Field) -> sig Store (InterpField f) ()
+  Write : (f : Field) -> (InterpField f) -> sig Store () ()
 
-STORE : (Schema k) -> EFFECT
-STORE s = MkEff (Interp s) Store
+STORE : EFFECT
+STORE = MkEff () Store
 
-read : (f : Field) -> Eff (InterpField f) [STORE s]
+read : (f : Field) -> Eff (InterpField f) [STORE]
 read f = call $ GeneralStore.Read f
 
-write : (f : Field) -> (InterpField f) -> Eff () [STORE s]
+write : (f : Field) -> (InterpField f) -> Eff () [STORE]
 write f x = call (Write f x)
 
 deserialize : (f : Field) -> String -> InterpField f
