@@ -75,10 +75,10 @@ instance Handler EthereumRules IO where
 
   handle (MkS v t s) Balance  k = k 100 (MkS v t s) -- TODO: Change this. Balance should be *read*.
 
-  handle (MkS v t s) (Save a) k = do putStrLn $ "Saved " ++ show a
+  handle (MkS v t s) (Save a) k = do putStrLn $ "- Saved " ++ show a
                                      k () (MkS v t (s+a))
 
-  handle (MkS v t s) (Send a) k = do putStrLn $ "Sent  " ++ show a
+  handle (MkS v t s) (Send a) k = do putStrLn $ "- Sent  " ++ show a
                                      k () (MkS v (t+a) s)
 
   handle (MkS v t s) (Finish) k = do putStrLn "\n"

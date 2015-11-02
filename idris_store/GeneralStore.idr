@@ -36,9 +36,11 @@ instance Handler Store IO where
   handle s (Read field)     k =
     do
       Right val <- readFile (show field)
+      putStrLn $ "- Read " ++ show field ++ ": " ++ trim val
       k (deserialize field (trim val)) s
   handle s (Write field val) k =
     do
+      putStrLn $ "- Write " ++ show field ++ " = " ++ serialize field val 
       writeFile (show field) (serialize field val)
       k () s
 

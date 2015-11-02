@@ -15,9 +15,6 @@ playerCount = EInt 0
 reward : Field
 reward = EInt 1
 
-store : Schema 2
-store = [playerCount, reward]
-
 namespace TestContract
   playerChoice : Int -> { auto p : LTE 10 v } ->
                  Eff Bool [ETH_IN v, STORE] (resultEffect [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE])
@@ -51,6 +48,6 @@ namespace TestContract
 namespace Main
   main : IO ()
   main = do
-    res <- runInit [MkS 10 0 0, store] (playerChoice 0)
+    res <- runInit [MkS 10 0 0, ()] (playerChoice 0)
     putStrLn . show $ res
 
