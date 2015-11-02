@@ -8,7 +8,6 @@ import Effect.Exception
 import Control.IOExcept
 import EVM
 
---import GeneralStore
 
 
 --perf older version, clean and rebuild
@@ -27,13 +26,6 @@ data Ethereum : CState -> Type where
   MkI : Ethereum NotRunning
   MkF : (trans: Nat) -> (saved: Nat) -> Ethereum (Finished trans saved)
 
-{-
-instance Show (Ethereum m) where
-  show = "derp"
-
-instance Show CState where
-  show = "herp"
-  -}
 instance Default CState where
   default = Init 1
 
@@ -103,23 +95,6 @@ ETH_OUT t s = ETHEREUM (Finished t s)
 resultEffect : List EFFECT -> List EFFECT -> Bool -> List EFFECT
 resultEffect t f cond = if cond then t else f
 
-{-
-instance Handler EthereumRules (IOExcept a) where
-  handle r Value k = k 0 r
-  handle (MkS v b t s) (Save a) k = do ioe_lift (printLn ("Saved " ++ show v)); k () (MkS v b t (s+a))
-  handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
-  handle (MkS v b t s) Finish k = k () (MkF t s)
-
-
-instance Handler EthereumRules m where
-  handle (MkS v b t s) Value k = k v (MkS v b t s)
-  handle (MkS v b t s) (Save a) k = k () (MkS v b t (s+a))
-  handle (MkS v b t s) (Send a) k = k () (MkS v b (t+a) s)
-  handle (MkS v b t s) (Finish) k = k () (MkF t s)
-  handle (MkS v b t s) Sender k = k "senderxyz" (MkS v b t s)
-  handle (MkS v b t s) (Read a) k = k a (MkS v b t s)
-  handle (MkS v b t s) Write k = k () (MkS v b t s)
--}
 sender : Eff String
        [ETHEREUM (Running v t s)]
 sender = call $ Sender
