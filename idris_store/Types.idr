@@ -24,16 +24,17 @@ instance Show Field where
 Schema : Nat -> Type
 Schema k = Vect k Field
 
-interpField : Field -> Type
-interpField (EInt _) = Int
-interpField (EString _) = String
-interpField (EAddress _) = String
+InterpField : Field -> Type
+InterpField (EInt _) = Integer
+InterpField (EString _) = String
+InterpField (EAddress _) = String
 
 -- Interpretation function: takes Schema and creates type
-interp : Schema k -> Type
-interp schema = HVect (map interpField schema)
+Interp : Schema k -> Type
+Interp schema = HVect (map InterpField schema)
 
 
+{-
 
 
 
@@ -59,3 +60,4 @@ mapMapMap f g (x :: xs) = cong $ mapMapMap f g xs
 
 funcs : (fs : Schema n) -> HVect (map (\f => interp fs -> interpField f) fs)
 funcs fs = rewrite sym $ mapMapMap (\t => interp fs -> t) interpField fs in allToHVect $ funcs' $ map interpField fs
+-}

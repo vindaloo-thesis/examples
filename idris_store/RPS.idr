@@ -20,7 +20,7 @@ store = [playerCount, reward]
 
 namespace TestContract
   playerChoice : Int -> { auto p : LTE 10 v } ->
-                 Eff Bool [ETH_IN v, STORE 2] (resultEffect [ETH_OUT (v-10) 10, STORE 2] [ETH_OUT v 0, STORE 2])
+                 Eff Bool [ETH_IN v, STORE] (resultEffect [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE])
   playerChoice {v} c = do
     pc <- read playerCount
     if pc < 2
