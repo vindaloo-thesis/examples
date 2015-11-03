@@ -13,7 +13,10 @@ playerCount : Field
 playerCount = EInt 0
 
 reward : Field
-reward = EInt 1
+reward = EInt (index playerCount + size playerCount)
+
+players : Nat -> Field
+players i = EAddress (index reward + size reward + i)
 
 namespace TestContract
   playerChoice : Int -> { auto p : LTE 10 v } ->
@@ -24,12 +27,14 @@ namespace TestContract
       then do
         save 10
         write reward (!(read reward)+10)
+        write (players (toNat pc)) !sender
         write playerCount (pc+1)
-        send (v-10) "sender"
+        send (v-10) !sender
         finish
         pureM True
       else do
-        send v "sender"
+        s <- sender
+        send v s
         finish
         pureM False
 
@@ -41,7 +46,7 @@ namespace TestContract
         finish
         pureM True
       else do
-        send v "sender"
+        send v !sender
         finish
         pureM False
 

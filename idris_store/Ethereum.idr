@@ -47,6 +47,7 @@ data EthereumRules : Effect where
             (Ethereum (Running v t s))
             (Ethereum (Running v t (s+a)))
   Send    : (a : Nat) ->
+            (r : String) ->
             sig EthereumRules ()
             (Ethereum (Running v t s))
             (Ethereum (Running v (t+a) s))
@@ -70,7 +71,7 @@ instance Handler EthereumRules IO where
   handle (MkS v t s) (Save a) k = do putStrLn $ "- Saved " ++ show a
                                      k () (MkS v t (s+a))
 
-  handle (MkS v t s) (Send a) k = do putStrLn $ "- Sent  " ++ show a
+  handle (MkS v t s) (Send a r) k = do putStrLn $ "- Sent  " ++ show a ++ " to " ++ show r
                                      k () (MkS v (t+a) s)
 
   handle (MkS v t s) (Finish) k = do putStrLn "\n"

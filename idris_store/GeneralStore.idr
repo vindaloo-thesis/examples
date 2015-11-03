@@ -26,10 +26,16 @@ deserialize (EString _) = id
 deserialize (EAddress _) = id
 
 serialize : (f : Field) -> InterpField f -> String
-serialize (EInt _)  = show
-serialize (EString _) = id
-serialize (EAddress _) = id
-
+serialize (EInt _) x = show x
+serialize (EString _) x = x
+serialize (EAddress _) x = x
+{-
+serialize (EArray _ l t) xs = "[" ++ serialize' "" xs ++ "]" where
+    serialize' : String -> Vect l' (InterpField t) -> String
+    serialize' acc []        = acc
+    serialize' acc [x]       = acc ++ serialize t x
+    serialize' acc (x :: xs) = serialize' (acc ++ serialize t x ++ ",") xs
+-}
 
 -- TODO: Error handler for when files don't exist etc
 instance Handler Store IO where
