@@ -72,7 +72,7 @@ instance Handler EthereumRules IO where
                                      k () (MkS v t (s+a))
 
   handle (MkS v t s) (Send a r) k = do putStrLn $ "- Sent  " ++ show a ++ " to " ++ show r
-                                     k () (MkS v (t+a) s)
+                                       k () (MkS v (t+a) s)
 
   handle (MkS v t s) (Finish) k = do putStrLn "\n"
                                      putStrLn "FINISHED"
@@ -112,7 +112,7 @@ save a = call $ Save a
 send : (a : Nat) -> (r : String) -> Eff ()
        [ETHEREUM (Running v t s)]
        [ETHEREUM (Running v (plus t a) s)]
-send a r = call $ Send a
+send a r = call $ Send a r
 
 --TODO: Wrap pureM here too. Doesn't seem to work right now.
 --finish ret = call (Finish ret) >>= (\_ => pureM ret)
