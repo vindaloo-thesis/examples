@@ -19,8 +19,10 @@ players : Nat -> Field
 players i = EAddress (index reward + size reward + i)
 
 namespace TestContract
-  playerChoice : Int -> { auto p : LTE 10 v } ->
-                 Eff Bool [ETH_IN v, STORE] (resultEffect [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE])
+  playerChoice : Int -> {v : Nat} -> { auto p : LTE 10 v } ->
+                 --Eff Bool [ETH_IN v, STORE] (resultEffect [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE])
+                  --resultEffect [ETH_IN v, STORE] [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE]
+                  resultEffect' (v-10) 10 v 0
   playerChoice {v} c = do
     pc <- read playerCount
     if pc < 2
@@ -38,7 +40,9 @@ namespace TestContract
         finish
         pureM False
 
-  saveMoney : Int -> Eff Bool [ETH_IN v] (resultEffect [ETH_OUT 0 v] [ETH_OUT v 0])
+  --saveMoney : Int -> Eff Bool [ETH_IN v] (resultEffect [ETH_OUT 0 v] [ETH_OUT v 0])
+  {-
+  saveMoney : Int -> resultEffect [ETH_IN v] [ETH_OUT 0 v] [ETH_OUT v 0]
   saveMoney {v} input =
     if input == 1
       then do
@@ -47,9 +51,11 @@ namespace TestContract
         pureM True
       else do
         send v !sender
-        finish
+        finish 
         pureM False
+        -}
 
+--runContract : Eff t 
 namespace Main
   main : IO ()
   main = do

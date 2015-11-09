@@ -7,6 +7,7 @@ import Effect.StdIO
 import Effect.Exception
 import Control.IOExcept
 import EVM
+import GeneralStore
 
 
 
@@ -93,8 +94,11 @@ ETH_IN v = ETHEREUM (Init v)
 ETH_OUT : Nat -> Nat -> EFFECT
 ETH_OUT t s = ETHEREUM (Finished t s)
 
-resultEffect : List EFFECT -> List EFFECT -> Bool -> List EFFECT
-resultEffect t f cond = if cond then t else f
+resultEffect : (i : List EFFECT) -> (t : List EFFECT) -> (f : List EFFECT) -> Type 
+resultEffect i t f = Eff Bool i (\cond => if cond then t else f)
+--resultEffect t f cond = if cond then t else f
+resultEffect' : {v : Nat} -> (tt: Nat) -> (ts : Nat) -> (ft : Nat) -> (fs : Nat) -> Type 
+resultEffect' {v} tt ts ft fs = DepEff.Eff Bool [ETH_IN v, STORE] (\cond => if cond then [ETH_OUT tt ts, STORE]  else [ETH_OUT ft fs, STORE])
 
 sender : Eff String
        [ETHEREUM (Running v t s)]
@@ -117,6 +121,7 @@ send a r = call $ Send a r
 --TODO: Wrap pureM here too. Doesn't seem to work right now.
 --finish ret = call (Finish ret) >>= (\_ => pureM ret)
 
+--finish : {auto p : LTE v (t+s)} -> Eff ()
 finish : Eff ()
          [ETHEREUM (Running v t s)]
          [ETHEREUM (Finished t s)]
