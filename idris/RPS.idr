@@ -18,11 +18,12 @@ reward = EInt (index playerCount + size playerCount)
 players : Nat -> Field
 players i = EAddress (index reward + size reward + i)
 
+moves : Nat -> Field
+moves i = EInt (index players + size reward + i)
+
 namespace TestContract
   playerChoice : Int -> {v : Nat} -> { auto p : LTE 10 v } ->
                  Eff Bool [ETH_IN v, STORE] (\succ => if succ then [ETH_OUT (v-10) 10, STORE] else [ETH_OUT v 0, STORE])
-                  --resultEffect [ETH_IN v, STORE] [ETH_OUT (v-10) 10, STORE] [ETH_OUT v 0, STORE]
-                  --resultEffect' (v-10) 10 v 0
   playerChoice {v} c = do
     pc <- read playerCount
     if pc < 2
@@ -30,6 +31,7 @@ namespace TestContract
         save 10
         write reward (!(read reward)+10)
         write (players (toNat pc)) !sender
+        write (moves (toNat pc)) c
         write playerCount (pc+1)
         send (v-10) !sender
         finish
