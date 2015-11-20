@@ -19,7 +19,7 @@ players : Nat -> Field
 players i = EAddress (index reward + size reward + i)
 
 moves : Nat -> Field
-moves i = EInt (index players + size reward + i)
+moves i = EInt (index players + size (players 2) + i)
 
 namespace TestContract
   playerChoice : Int -> {v : Nat} -> { auto p : LTE 10 v } ->
