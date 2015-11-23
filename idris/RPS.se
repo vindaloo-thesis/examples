@@ -1,0 +1,75 @@
+data players[2]
+data moves[2]
+data playerCount
+data reward
+
+def winner(a, b):
+  if a == 0 and b == 0:
+    return 2
+  if a == 1 and b == 1:
+    return 2
+  if a == 2 and b == 2:
+    return 2
+
+  if a == 2 and b == 1:
+    return 0
+  if a == 1 and b == 2:
+    return 1
+
+  if a == 0 and b == 2:
+    return 0
+  if a == 2 and b == 0:
+    return 1
+
+  if a == 1 and b == 0:
+    return 0
+  if a == 0 and b == 1:
+    return 1
+
+def init():
+  self.playerCount = 0
+
+#accepts a hash from the player in form sha3(address, choice, nonce)
+def playerChoice(choice):
+  if self.test_callstack() != 1:  #automatic for all functions
+    send(0, msg.sender, msg.value)
+    return(0) 
+
+  if msg.value < 10: #generated from auto LTE proof
+    send(0, msg.sender, msg.value)
+    return(0)
+
+  pc = self.playerCount
+  
+  if pc < 2: #generated from auto LTE proof
+    self.reward = self.reward + 10
+    self.players[pc] = msg.sender
+    self.moves[pc] = choice
+    self.playerCount = self.playerCount + 1
+    send(0, msg.sender, msg.value-10)
+    return(1) 
+    
+def check():
+  if self.test_callstack() != 1:  #automatic for all functions
+    send(0, msg.sender, msg.value)
+    return(0) 
+
+  if msg.value != 0: #generated from signature
+    send(0, msg.sender, msg.value)
+    return(0)
+
+  if self.playerCount == 2:
+    w = self.winner(self.moves[0], self.moves[1])
+    if w == 2:
+      send(0, self.players[0], 10)
+      send(0, self.players[1], 10)
+      return(2)
+    else:
+      send(0, self.players[w], 20)
+      return(w)
+  else:
+    return(3)
+
+def test_callstack():
+  return(1)
+ 
