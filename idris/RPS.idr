@@ -56,11 +56,11 @@ namespace TestContract
         finish
         pureM False
 
-  --0 : player 1
-  --1 : player 2
-  --2 : draw
-  --3 : not enough players joined
-  check : Eff Integer [ETH_IN 0, STORE] (\winner => if winner == 3 then [ETH_OUT 0 0, STORE] else [ETH_OUT 20 0, STORE])
+  --0 : not enough players joined, or invalid value
+  --1 : player 1
+  --2 : player 2
+  --3 : draw
+  check : Eff Integer [ETH_IN 0, STORE] (\winner => if winner == 0 then [ETH_OUT 0 0, STORE] else [ETH_OUT 20 0, STORE])
   check = if !(read playerCount) == 2
              then do
                let w = winner !(read (moves 0)) !(read (moves 1))
@@ -68,19 +68,19 @@ namespace TestContract
                   0 => do --player 1 wins
                     send 20 !(read (players 0))
                     finish
-                    pureM 0
-                  1 => do
+                    pureM 1
+                  1 => do --player 2 wins
                     send 20 !(read (players 1))
                     finish
-                    pureM 1
-                  2 => do
+                    pureM 2
+                  otherwise => do --draw
                     send 10 !(read (players 0))
                     send 10 !(read (players 1))
                     finish
-                    pureM 2
+                    pureM 3
             else do
               finish
-              pureM 3
+              pureM 0
 
 
 namespace Main

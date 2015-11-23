@@ -1,7 +1,6 @@
 data players[2]
 data moves[2]
 data playerCount
-data reward
 
 def winner(a, b):
   if a == 0 and b == 0:
@@ -42,7 +41,6 @@ def playerChoice(choice):
   pc = self.playerCount
   
   if pc < 2: #generated from auto LTE proof
-    self.reward = self.reward + 10
     self.players[pc] = msg.sender
     self.moves[pc] = choice
     self.playerCount = self.playerCount + 1
@@ -60,15 +58,16 @@ def check():
 
   if self.playerCount == 2:
     w = self.winner(self.moves[0], self.moves[1])
-    if w == 2:
+    if w == 0:
+      send(0, self.players[0], 20)
+    elif w == 1:
+      send(0, self.players[1], 20)
+    else:
       send(0, self.players[0], 10)
       send(0, self.players[1], 10)
-      return(2)
-    else:
-      send(0, self.players[w], 20)
-      return(w)
+      return(3)
   else:
-    return(3)
+    return(0)
 
 def test_callstack():
   return(1)
