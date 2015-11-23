@@ -83,22 +83,6 @@ namespace TestContract
               pureM 3
 
 
-  --saveMoney : Int -> Eff Bool [ETH_IN v] (resultEffect [ETH_OUT 0 v] [ETH_OUT v 0])
-  {-
-  saveMoney : Int -> resultEffect [ETH_IN v] [ETH_OUT 0 v] [ETH_OUT v 0]
-  saveMoney {v} input =
-    if input == 1
-      then do
-        save v
-        finish
-        pureM True
-      else do
-        send v !sender
-        finish 
-        pureM False
-        -}
-
---runContract : Eff t 
 namespace Main
   main : IO ()
   main = do
