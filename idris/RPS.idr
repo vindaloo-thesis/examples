@@ -69,16 +69,16 @@ namespace TestContract
     if !(read playerCount) == 2
        then do
          let w = winner !(read (moves 0)) !(read (moves 1))
-         case w of
-              2 => do
-                send 10 !(read (players 0))
-                send 10 !(read (players 1))
-                finish
-                pureM 2
-              otherwise => do
-                send 20 !(read (players (toNat w)))
-                finish
-                pureM 0
+         if w == 2
+            then do
+              send 10 !(read (players 0))
+              send 10 !(read (players 1))
+              finish
+              pureM 2
+            else do
+              send 20 !(read (players (toNat w)))
+              finish
+              pureM 0
       else do
         finish
         pureM 3
