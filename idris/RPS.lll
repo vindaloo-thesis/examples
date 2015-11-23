@@ -1,0 +1,216 @@
+(seq 
+    (sstore 4 0)
+    (return 0 
+        (lll 
+            (with '__funid 
+                (div (calldataload 0) 
+                    26959946667150639794667015087019630673637144422540572481103610249216
+                )
+                (seq 
+                    (unless (iszero (eq (get '__funid) 3522722983)) 
+                        (seq 
+                            (seq 
+                                (set 'a (calldataload 4))
+                                (set 'b (calldataload 36))
+                            )
+                            (seq 
+                                (unless (iszero (if (eq (get 'a) 0) (eq (get 'b) 0) 0)) 
+                                    (seq 
+                                        (set '_temp_3891 2)
+                                        (return (ref '_temp_3891) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 1) (eq (get 'b) 1) 0)) 
+                                    (seq 
+                                        (set '_temp_4081 2)
+                                        (return (ref '_temp_4081) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 2) (eq (get 'b) 2) 0)) 
+                                    (seq 
+                                        (set '_temp_4271 2)
+                                        (return (ref '_temp_4271) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 2) (eq (get 'b) 1) 0)) 
+                                    (seq 
+                                        (set '_temp_4461 0)
+                                        (return (ref '_temp_4461) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 1) (eq (get 'b) 2) 0)) 
+                                    (seq 
+                                        (set '_temp_4651 1)
+                                        (return (ref '_temp_4651) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 0) (eq (get 'b) 2) 0)) 
+                                    (seq 
+                                        (set '_temp_4841 0)
+                                        (return (ref '_temp_4841) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 2) (eq (get 'b) 0) 0)) 
+                                    (seq 
+                                        (set '_temp_5031 1)
+                                        (return (ref '_temp_5031) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 1) (eq (get 'b) 0) 0)) 
+                                    (seq 
+                                        (set '_temp_5221 0)
+                                        (return (ref '_temp_5221) 32)
+                                    )
+                                )
+                                (unless (iszero (if (eq (get 'a) 0) (eq (get 'b) 1) 0)) 
+                                    (seq 
+                                        (set '_temp_5411 1)
+                                        (return (ref '_temp_5411) 32)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    (unless (iszero (eq (get '__funid) 3851832333)) 
+                        (seq 
+                            (set 'choice (calldataload 4))
+                            (seq 
+                                (unless 
+                                    (iszero 
+                                        (iszero 
+                                            (eq 
+                                                (with '_datastart (add (alloc 36) 28) 
+                                                    (seq 
+                                                        (mstore (sub (get '_datastart) 28) 319366028)
+                                                        (seq 
+                                                            (pop 
+                                                                (call (sub (gas) 45) (address) 0 (get '_datastart) 4 (ref '_temp567_dataout) 32)
+                                                            )
+                                                            (get '_temp567_dataout)
+                                                        )
+                                                    )
+                                                )
+                                                1
+                                            )
+                                        )
+                                    )
+                                    (seq 
+                                        (call 0 (caller) (callvalue) 0 0 0 0)
+                                        (seq 
+                                            (set '_temp_6071 0)
+                                            (return (ref '_temp_6071) 32)
+                                        )
+                                    )
+                                )
+                                (unless (iszero (slt (callvalue) 10)) 
+                                    (seq 
+                                        (call 0 (caller) (callvalue) 0 0 0 0)
+                                        (seq 
+                                            (set '_temp_6331 0)
+                                            (return (ref '_temp_6331) 32)
+                                        )
+                                    )
+                                )
+                                (set 'pc (sload 4))
+                                (unless (iszero (slt (get 'pc) 2)) 
+                                    (seq 
+                                        (sstore (get 'pc) (caller))
+                                        (sstore (add 2 (get 'pc)) (get 'choice))
+                                        (sstore 4 (add (sload 4) 1))
+                                        (call 0 (caller) (sub (callvalue) 10) 0 0 0 0)
+                                        (seq 
+                                            (set '_temp_6891 1)
+                                            (return (ref '_temp_6891) 32)
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    (unless (iszero (eq (get '__funid) 2442674349)) 
+                        (seq 
+                            (unless 
+                                (iszero 
+                                    (iszero 
+                                        (eq 
+                                            (with '_datastart (add (alloc 36) 28) 
+                                                (seq 
+                                                    (mstore (sub (get '_datastart) 28) 319366028)
+                                                    (seq 
+                                                        (pop 
+                                                            (call (sub (gas) 45) (address) 0 (get '_datastart) 4 (ref '_temp711_dataout) 32)
+                                                        )
+                                                        (get '_temp711_dataout)
+                                                    )
+                                                )
+                                            )
+                                            1
+                                        )
+                                    )
+                                )
+                                (seq 
+                                    (call 0 (caller) (callvalue) 0 0 0 0)
+                                    (seq 
+                                        (set '_temp_7511 0)
+                                        (return (ref '_temp_7511) 32)
+                                    )
+                                )
+                            )
+                            (unless (iszero (iszero (eq (callvalue) 0))) 
+                                (seq 
+                                    (call 0 (caller) (callvalue) 0 0 0 0)
+                                    (seq 
+                                        (set '_temp_7791 0)
+                                        (return (ref '_temp_7791) 32)
+                                    )
+                                )
+                            )
+                            (if (eq (sload 4) 2) 
+                                (seq 
+                                    (set 'w 
+                                        (with '_datastart (add (alloc 100) 28) 
+                                            (seq 
+                                                (mstore (sub (get '_datastart) 28) 3522722983)
+                                                (mstore (add (get '_datastart) 4) (sload 2))
+                                                (mstore (add (get '_datastart) 36) (sload 3))
+                                                (seq 
+                                                    (pop 
+                                                        (call (sub (gas) 45) (address) 0 (get '_datastart) 68 (ref '_temp796_dataout) 32)
+                                                    )
+                                                    (get '_temp796_dataout)
+                                                )
+                                            )
+                                        )
+                                    )
+                                    (if (eq (get 'w) 0) (call 0 (sload 0) 20 0 0 0 0) 
+                                        (if (eq (get 'w) 1) (call 0 (sload 1) 20 0 0 0 0) 
+                                            (seq 
+                                                (call 0 (sload 0) 10 0 0 0 0)
+                                                (call 0 (sload 1) 10 0 0 0 0)
+                                                (seq 
+                                                    (set '_temp_9151 3)
+                                                    (return (ref '_temp_9151) 32)
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                                (seq 
+                                    (set '_temp_9221 0)
+                                    (return (ref '_temp_9221) 32)
+                                )
+                            )
+                        )
+                    )
+                    (unless (iszero (eq (get '__funid) 319366028)) 
+                        (seq 
+                            (set '_temp_9361 1)
+                            (return (ref '_temp_9361) 32)
+                        )
+                    )
+                )
+            )
+            0
+        )
+    )
+)
