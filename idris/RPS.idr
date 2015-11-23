@@ -12,11 +12,8 @@ import GeneralStore
 playerCount : Field
 playerCount = EInt 0
 
-reward : Field
-reward = EInt (index playerCount + size playerCount)
-
 players : Nat -> Field
-players i = EAddress (index reward + size reward + i)
+players i = EAddress (index playerCount + size playerCount + i)
 
 moves : Nat -> Field
 moves i = EInt (index (players 2) + size (players 2) + i)
@@ -47,7 +44,6 @@ namespace TestContract
     if pc < 2
      then do
         save 10
-        write reward (!(read reward)+10)
         write (players (toNat pc)) !sender
         write (moves (toNat pc)) c
         write playerCount (pc+1)
@@ -65,23 +61,26 @@ namespace TestContract
   --2 : draw
   --3 : not enough players joined
   check : Eff Integer [ETH_IN 0, STORE] (\winner => if winner == 3 then [ETH_OUT 0 0, STORE] else [ETH_OUT 20 0, STORE])
-  check = do
-    if !(read playerCount) == 2
-       then do
-         let w = winner !(read (moves 0)) !(read (moves 1))
-         if w == 2
-            then do
-              send 10 !(read (players 0))
-              send 10 !(read (players 1))
-              finish
-              pureM 2
+  check = if !(read playerCount) == 2
+             then do
+               let w = winner !(read (moves 0)) !(read (moves 1))
+               case w of 
+                  0 => do --player 1 wins
+                    send 20 !(read (players 0))
+                    finish
+                    pureM 0
+                  1 => do
+                    send 20 !(read (players 1))
+                    finish
+                    pureM 1
+                  2 => do
+                    send 10 !(read (players 0))
+                    send 10 !(read (players 1))
+                    finish
+                    pureM 2
             else do
-              send 20 !(read (players (toNat w)))
               finish
-              pureM 0
-      else do
-        finish
-        pureM 3
+              pureM 3
 
 
   --saveMoney : Int -> Eff Bool [ETH_IN v] (resultEffect [ETH_OUT 0 v] [ETH_OUT v 0])
