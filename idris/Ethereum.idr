@@ -36,6 +36,7 @@ instance Default (Ethereum NotRunning) where
 instance Default (Ethereum (Running v 0 0)) where
   default {v} = MkS v 0 0 
 
+--TODO: Can we remove Finish here and just use Running?
 data EthereumRules : Effect where
   Value   : sig EthereumRules Nat
             (Ethereum (Running v t s))
@@ -91,6 +92,7 @@ instance Handler EthereumRules IO where
 ETH_IN : Nat -> EFFECT
 ETH_IN v = ETHEREUM (Init v)
 
+--TODO: Should return "running", not "finished". runContract should finish
 ETH_OUT : Nat -> Nat -> EFFECT
 ETH_OUT t s = ETHEREUM (Finished t s)
 
