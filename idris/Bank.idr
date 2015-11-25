@@ -5,10 +5,9 @@ import Ethereum
 import Types
 
 namespace Bank
-  deposit : {v : Nat} -> Eff () [ETHEREUM (Init v)] [ETHEREUM (Finished 0 v)]
+  deposit : {v : Nat} -> Eff () [ETHEREUM (Init v)] [ETHEREUM (Running v 0 v)]
   deposit {v} = do
     save v
-    finish
 
 namespace Main
   main : IO ()

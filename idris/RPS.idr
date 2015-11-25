@@ -38,7 +38,7 @@ namespace TestContract
     write playerCount 0
 
   playerChoice : Integer -> {v : Nat} -> { auto p : LTE 10 v } ->
-                 Eff Bool [ETH_IN v, STORE] (\succ => if succ then [ETH_OUT (v-10) 10, STORE] else [ETH_OUT v 0, STORE])
+                 Eff Bool [ETH_IN v, STORE] (\succ => if succ then [ETH_OUT v (v-10) 10, STORE] else [ETH_OUT v v 0, STORE])
   playerChoice {v} c = do
     pc <- read playerCount
     if pc < 2
@@ -48,38 +48,32 @@ namespace TestContract
         write (moves (toNat pc)) c
         write playerCount (pc+1)
         send (v-10) !sender
-        finish
         pureM True
       else do
         s <- sender
         send v s
-        finish
         pureM False
 
   --0 : not enough players joined, or invalid value
   --1 : player 1
   --2 : player 2
   --3 : draw
-  check : Eff Integer [ETH_IN 0, STORE] (\winner => if winner == 0 then [ETH_OUT 0 0, STORE] else [ETH_OUT 20 0, STORE])
+  check : Eff Integer [ETH_IN 0, STORE] (\winner => if winner == 0 then [ETH_OUT 0 0 0, STORE] else [ETH_OUT 0 20 0, STORE])
   check = if !(read playerCount) == 2
              then do
                let w = winner !(read (moves 0)) !(read (moves 1))
                case w of 
                   0 => do --player 1 wins
                     send 20 !(read (players 0))
-                    finish
                     pureM 1
                   1 => do --player 2 wins
                     send 20 !(read (players 1))
-                    finish
                     pureM 2
                   otherwise => do --draw
                     send 10 !(read (players 0))
                     send 10 !(read (players 1))
-                    finish
                     pureM 3
             else do
-              finish
               pureM 0
 
 
