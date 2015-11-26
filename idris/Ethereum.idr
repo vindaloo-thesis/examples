@@ -33,9 +33,11 @@ instance Default (Ethereum (Running v 0 0)) where
 
 --TODO: Can we remove Finish here and just use Running?
 data EthereumRules : Effect where
+  ContractAddress : sig EthereumRules String
+                    (Ethereum (Running v t s))
   Value   : sig EthereumRules Nat
             (Ethereum (Running v t s))
-  Balance : sig EthereumRules Nat
+  Balance : String -> sig EthereumRules Nat
             (Ethereum (Running v t s))
   Sender   : sig EthereumRules String
             (Ethereum (Running v t s))
@@ -58,7 +60,9 @@ Contract x ce = {m : Type -> Type} -> {v : Nat} -> EffM m x [ETHEREUM (Init v)] 
 instance Handler EthereumRules IO where
   handle (MkS v t s) Value    k = k v (MkS v t s)
 
-  handle (MkS v t s) Balance  k = k 100 (MkS v t s) -- TODO: Change this. Balance should be *read*.
+  handle (MkS v t s) ContractAddress k = k "0x00000000000000000000000000000000deadbeef" (MkS v t s)
+
+  handle (MkS v t s) (Balance a) k = k 100 (MkS v t s) -- TODO: Change this. Balance should be *read*.
 
   handle (MkS v t s) (Save a) k = do putStrLn $ "- Saved " ++ show a
                                      k () (MkS v t (s+a))
@@ -66,7 +70,7 @@ instance Handler EthereumRules IO where
   handle (MkS v t s) (Send a r) k = do putStrLn $ "- Sent  " ++ show a ++ " to " ++ show r
                                        k () (MkS v (t+a) s)
 
-  handle (MkS v t s) Sender k   = k "senderxyz" (MkS v t s)
+  handle (MkS v t s) Sender k   = k "0x00cf7667b8dd4ece1728ef7809bc844a1356aadf" (MkS v t s)
 
 
 ETH_IN : Nat -> EFFECT
@@ -75,6 +79,9 @@ ETH_IN v = ETHEREUM (Init v)
 ETH_OUT : Nat -> Nat -> Nat -> EFFECT
 ETH_OUT v t s = ETHEREUM (Finished {v} t s)
 
+contractAddress : Eff String
+       [ETHEREUM (Running v t s)]
+contractAddress = call $ ContractAddress
 
 sender : Eff String
        [ETHEREUM (Running v t s)]
@@ -83,6 +90,10 @@ sender = call $ Sender
 value : Eff Nat
        [ETHEREUM (Running v t s)]
 value = call $ Value
+
+balance : String -> Eff Nat
+       [ETHEREUM (Running v t s)]
+balance a = call $ (Balance a)
 
 save : (a : Nat) -> Eff ()
        [ETHEREUM (Running v t s)]
