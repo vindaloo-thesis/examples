@@ -102,6 +102,6 @@ save a = call $ Save a
 
 send : (a : Nat) -> (r : String) -> Eff ()
        [ETHEREUM (Running v t s)]
-       [ETHEREUM (Running v (plus t a) s)]
+       [ETHEREUM (Running v (t+a) s)]
 send a r = call $ Send a r
 
