@@ -7,8 +7,6 @@ import Effect.StdIO
 import Effect.Exception
 import Control.IOExcept
 import EVM
-import GeneralStore
-
 
 ------------ TYPES -----------------
 data Commit a = Comm a
