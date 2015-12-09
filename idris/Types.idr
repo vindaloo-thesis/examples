@@ -39,7 +39,7 @@ Schema k = Vect k Field
 InterpField : Field -> Type
 InterpField (EInt _) = Integer
 InterpField (EString _) = String
-InterpField (EAddress _) = String
+InterpField (EAddress _) = Integer
 --InterpField (EArray _ l t) = Vect l (InterpField t)
 
 -- Interpretation function: takes Schema and creates type

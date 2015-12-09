@@ -1,7 +1,7 @@
 module GeneralStore
 
 import Effects
-import Effect.StdIO
+--import Effect.StdIO
 import Data.Vect
 import Data.HVect
 import Types
@@ -23,12 +23,12 @@ write f x = call (Write f x)
 deserialize : (f : Field) -> String -> InterpField f
 deserialize (EInt _)  = cast . prim__fromStrInt 
 deserialize (EString _) = id
-deserialize (EAddress _) = id
+deserialize (EAddress _) = cast . prim__fromStrInt 
 
 serialize : (f : Field) -> InterpField f -> String
 serialize (EInt _) x = show x
 serialize (EString _) x = x
-serialize (EAddress _) x = x
+serialize (EAddress _) x = show x
 {-
 serialize (EArray _ l t) xs = "[" ++ serialize' "" xs ++ "]" where
     serialize' : String -> Vect l' (InterpField t) -> String
@@ -41,8 +41,8 @@ serialize (EArray _ l t) xs = "[" ++ serialize' "" xs ++ "]" where
 instance Handler Store IO where
   handle s (Read field)     k =
     do
-      Right val <- readFile (show field)
-      putStrLn $ "- Read " ++ show field ++ ": " ++ trim val
+      Right val <- readFile "(show field)"
+      putStrLn $ "- Read " ++ show field ++ ": " ++ trim "val"
       k (deserialize field (trim val)) s
   handle s (Write field val) k =
     do

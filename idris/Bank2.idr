@@ -16,7 +16,7 @@ namespace Bank2
                              then [ETHEREUM (Running 0 a 0)]
                              else [ETHEREUM (Running 0 0 0)])
   withdraw a = if !sender ==
-                  "0x00cf7667b8dd4ece1728ef7809bc844a1356aadf"
+                  0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
                   && !(balance !contractAddress) >= a
                   then do
                     send a !sender
