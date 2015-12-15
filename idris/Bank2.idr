@@ -1,21 +1,21 @@
 module Bank
-import Serpent
-import Serpent.Prim
 import Effects
 import Ethereum
-import Types
+import Ethereum.Ether
+import Ethereum.SIO
+import Ethereum.Types
 
 namespace Bank2
   deposit : {v : Nat} -> Eff ()
-            [ETHEREUM (Init v)]
-            [ETHEREUM (Running v 0 v)]
+            [ETH (Init v)]
+            [ETH (Running v 0 v)]
   deposit {v} = save v
 
   withdraw : (a : Nat) -> Eff Bool
-             [ETHEREUM (Init 0)]
+             [ETH (Init 0)]
              (\success => if success
-                             then [ETHEREUM (Running 0 a 0)]
-                             else [ETHEREUM (Running 0 0 0)])
+                             then [ETH (Running 0 a 0)]
+                             else [ETH (Running 0 0 0)])
   withdraw a = if !sender ==
                   0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
                   && !(balance !contractAddress) >= a
@@ -37,12 +37,21 @@ namespace Main
     --putStrLn . show $ res
   --main = runInit [MkS 10 0 0] (withdraw 0)
 
+  testList : FFI_Export FFI_Se "testHdr.se" []
+  testList = Data Nat "Nat" $
+             Data (List Nat) "ListNat" $
+             Data (Bool) "Bool" $
+             Fun runDep "deposit" $
+             Fun Bank.Main.runWith "withdraw" $
+             End
+{-
   testList : FFI_Export FFI_Py "testHdr.py" []
   testList = Data Nat "Nat" $
              Data (List Nat) "ListNat" $
              Data (Bool) "Bool" $
-             --Data (TransEff.Eff () [ETHEREUM (Init x)] [ETHEREUM (Running x 0 x)]) "EffEth" $
+             --Data (TransEff.Eff () [ETH (Init x)] [ETH (Running x 0 x)]) "EffEth" $
              --Fun deposit "deposit" $
              Fun runDep "deposit" $
              Fun Bank.Main.runWith "withdraw" $
              End
+             -}
