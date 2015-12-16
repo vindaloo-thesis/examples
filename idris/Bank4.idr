@@ -6,16 +6,16 @@ import Ethereum.Types
 import Ethereum.GeneralStore
 
 --TODO: All addresses map to the same index :$
-balances : String -> Field
-balances a = EInt 0 
+balances : Field
+balances = EInt "0"
 
 namespace Bank
   deposit : {v : Nat} -> TransEff.Eff ()
             [ETH (Init v), STORE]
             [ETH (Running v 0 v), STORE]
   deposit {v} = do
-    b <- read (balances !sender)
-    write (balances !sender) (b+(toIntegerNat v))
+    b <- read (balances)
+    write (balances) (b+(toIntNat v))
     save v
 
   withdraw : (a : Nat) -> Eff Bool
@@ -25,9 +25,9 @@ namespace Bank
                              else [ETH (Running 0 0 0), STORE])
   withdraw a = do
     b <- read (balances !sender)
-    if b >= (toIntegerNat a)
+    if b >= (toIntNat a)
        then do
-         write (balances !sender) (b-(toIntegerNat a))
+         write (balances) (b-(toIntNat a))
          send a !sender
          pureM True
        else (pureM False)
