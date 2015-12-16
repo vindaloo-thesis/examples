@@ -31,7 +31,7 @@ namespace Main
   runWith : Nat -> SIO Bool
   runWith v = runInit [MkS 0 0 0] (withdraw v)
 
-  main : IO ()
+  main : SIO ()
   main = return ()
     --res <- runInit [MkS 0 0 0] (withdraw 100)
     --putStrLn . show $ res
