@@ -6,8 +6,8 @@ import Effect.StdIO
 import Ethereum
 import Data.Vect
 import Data.HVect
-import Types
-import GeneralStore
+import Ethereum.Types
+import Ethereum.GeneralStore
 
 playerCount : Field
 playerCount = EInt 0
