@@ -35,15 +35,15 @@ namespace Bank
                              then
                               [STORE, ETH (Running 0 a 0)]
                              else [STORE, ETH (Running 0 0 0)])
-  withdraw a =
-    if !sender == !(read address1)
-       then if !(read balance1) >= toIntNat a
-               then do
-                 update balance1 (\b => b - toIntNat a)
-                 send a !sender
-                 pureM True
-               else (pureM False)
-       else case !sender == !(read address2) of
+  withdraw a = do
+    case !sender == !(read address1) of  --case because doesn't type check with ifs. ¯\_(ツ)_/¯
+         True => if !(read balance1) >= toIntNat a
+                                then do
+                                  update balance1 (\b => b - toIntNat a)
+                                  send a !sender
+                                  pureM True
+                                else (pureM False)
+         otherwise => case !sender == !(read address2) of
                            True => if !(read balance2) >= toIntNat a
                                                   then do
                                                     update balance2 (\b => b - toIntNat a)
