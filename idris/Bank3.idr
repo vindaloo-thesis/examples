@@ -28,32 +28,30 @@ namespace Bank
         then update balance2 (+ toIntNat v)
         else return ()
     save v
-  -- it seems like the problem with DepEff and multiple effects...
+    
   withdraw : (a : Nat) -> DepEff.Eff Bool
              [STORE, ETH (Init 0)]
              (\success => if success
-                             then [STORE, ETH (Running 0 a 0)]
+                             then
+                              [STORE, ETH (Running 0 a 0)]
                              else [STORE, ETH (Running 0 0 0)])
-  withdraw a = do
-      send a !sender
-      update balance1 (subtract (toIntNat a))
-      pureM True
-{-    if !(read address1) == !sender
+  withdraw a = 
+    if !(read address1) == !sender
       then if !(read balance1) >= toIntNat a
             then do
-              update balance1 (subtract (toIntNat a))
+              update balance1 (\b => b - toIntNat a)
               send a !sender
               pureM True
             else (pureM False)
       else if !(read address2) == !sender
               then if !(read balance2) >= toIntNat a
                     then do
-                      update balance2 (subtract (toIntNat a))
+                      update balance2 (\b => b - toIntNat a)
                       send a !sender
                       pureM True
                     else (pureM False)
               else (pureM False)
--}
+
 namespace Main
   runDep : Nat -> SIO ()
   runDep v = runInit [(),MkS v 0 0] deposit
