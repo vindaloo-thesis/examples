@@ -35,22 +35,22 @@ namespace Bank
                              then
                               [STORE, ETH (Running 0 a 0)]
                              else [STORE, ETH (Running 0 0 0)])
-  withdraw a = 
-    if !(read address1) == !sender
-      then if !(read balance1) >= toIntNat a
-            then do
-              update balance1 (\b => b - toIntNat a)
-              send a !sender
-              pureM True
-            else (pureM False)
-      else if !(read address2) == !sender
-              then if !(read balance2) >= toIntNat a
-                    then do
-                      update balance2 (\b => b - toIntNat a)
-                      send a !sender
-                      pureM True
-                    else (pureM False)
-              else (pureM False)
+  withdraw a =
+    if !sender == !(read address1)
+       then if !(read balance1) >= toIntNat a
+               then do
+                 update balance1 (\b => b - toIntNat a)
+                 send a !sender
+                 pureM True
+               else (pureM False)
+       else case !sender == !(read address2) of
+                           True => if !(read balance2) >= toIntNat a
+                                                  then do
+                                                    update balance2 (\b => b - toIntNat a)
+                                                    send a !sender
+                                                    pureM True
+                                                  else (pureM False)
+                           otherwise => (pureM False)
 
 namespace Main
   runDep : Nat -> SIO ()
