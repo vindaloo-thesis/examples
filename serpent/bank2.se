@@ -1,0 +1,811 @@
+#Prelude.Bool.&&
+
+def idris_Prelude_46_Classes_46__61__61_(v0, v1): #Prelude.Classes.==
+    retVal = v1
+    return retVal
+
+
+def idris_Prelude_46_Classes_46__62_(v0, v1): #Prelude.Classes.>
+    if v1[0] == 0:
+      v2 = v1[1]
+      v3 = v1[2]
+      #empty project
+      retVal = v3
+      return retVal
+
+
+
+#Force
+def idris_Ether_46_balance(v0, v1, v2, v3, v4): #Ether.balance
+    v5 = [0]
+    v6 = [2]
+    retVal = [2,v5,v6]
+    return retVal
+
+
+#call__IO
+def idris_Prelude_46_Classes_46_compare(v0, v1): #Prelude.Classes.compare
+    if v1[0] == 0:
+      v2 = v1[1]
+      v3 = v1[2]
+      #empty project
+      retVal = v2
+      return retVal
+
+
+
+def idris_Ether_46_contractAddress(v0, v1, v2, v3): #Ether.contractAddress
+    v4 = [0]
+    v5 = [0]
+    retVal = [2,v4,v5]
+    return retVal
+
+
+def idris_Effects_46_dropEnv(v0, v1, v2, v3, v4): #Effects.dropEnv
+    if v4[0] == 2:
+      v5 = v4[1]
+      #empty project
+      if v3[0] == 1:
+        v6 = v3[1]
+        v7 = v3[2]
+        v8 = v3[3]
+        #empty project
+        v9 = 0 #Nothing
+        v10 = 0 #Nothing
+        v11 = 0 #Nothing
+        retVal = self.idris_Effects_46_dropEnv(v9, v10, v11, v8, v5)
+        return retVal
+
+    elif v4[0] == 1:
+      v5 = v4[1]
+      #empty project
+      if v3[0] == 1:
+        v6 = v3[1]
+        v7 = v3[2]
+        v8 = v3[3]
+        #empty project
+        v9 = 0 #Nothing
+        v10 = 0 #Nothing
+        v11 = 0 #Nothing
+        v9 = self.idris_Effects_46_dropEnv(v9, v10, v11, v8, v5)
+        retVal = [1,v6,v7,v9]
+        return retVal
+
+
+    elif v4[0] == 0:
+      #empty project
+      retVal = [0]
+      return retVal
+
+
+
+def idris_Effects_46_eff(v0, v1, v2, v3, v4, v5, v6, v7): #Effects.eff
+    if v6[0] == 5:
+      v8 = v6[1]
+      #empty project
+      v9 = 0 #Nothing
+      v10 = 0 #Nothing
+      v11 = 0 #Nothing
+      v12 = 0 #Nothing
+      v13 = 0 #Nothing
+      v14 = 0 #Nothing
+      v15 = 0 #Nothing
+      v16 = 0 #Nothing
+      v17 = 0 #Nothing
+      v14 = self.idris_Effects_46_unlabel(v14, v15, v16, v17, v5)
+      v15 = [65697,v7]
+      retVal = self.idris_Effects_46_eff(v9, v10, v11, v12, v13, v14, v8, v15)
+      return retVal
+    elif v6[0] == 2:
+      v8 = v6[1]
+      v9 = v6[2]
+      #empty project
+      v10 = 0 #Nothing
+      v11 = 0 #Nothing
+      v12 = 0 #Nothing
+      v13 = 0 #Nothing
+      v14 = 0 #Nothing
+      v15 = 0 #Nothing
+      v16 = 0 #Nothing
+      retVal = self.idris_Effects_46_execEff(v10, v11, v12, v13, v14, v15, v16, v5, v8, v9, v7)
+      return retVal
+
+    elif v6[0] == 1:
+      v8 = v6[1]
+      v9 = v6[2]
+      #empty project
+      v10 = 0 #Nothing
+      v11 = 0 #Nothing
+      v12 = 0 #Nothing
+      v13 = 0 #Nothing
+      v14 = 0 #Nothing
+      v15 = [65699,v9,v7]
+      retVal = self.idris_Effects_46_eff(v10, v11, v12, v13, v14, v5, v8, v15)
+      return retVal
+
+    elif v6[0] == 3:
+      v8 = v6[1]
+      v9 = v6[2]
+      #empty project
+      v10 = 0 #Nothing
+      v11 = 0 #Nothing
+      v12 = 0 #Nothing
+      v13 = 0 #Nothing
+      v14 = 0 #Nothing
+      v15 = 0 #Nothing
+      v16 = 0 #Nothing
+      v17 = 0 #Nothing
+      v15 = self.idris_Effects_46_dropEnv(v15, v16, v17, v5, v8)
+      v16 = [65701,v7,v8,v5]
+      retVal = self.idris_Effects_46_eff(v10, v11, v12, v13, v14, v15, v9, v16)
+      return retVal
+
+    elif v6[0] == 4:
+      v8 = v6[1]
+      v9 = v6[2]
+      v10 = v6[3]
+      #empty project
+      v11 = 0 #Nothing
+      v12 = 0 #Nothing
+      v13 = 0 #Nothing
+      v14 = 0 #Nothing
+      v15 = 0 #Nothing
+      v16 = [1,v8,v9,v5]
+      v17 = [65702,v7]
+      retVal = self.idris_Effects_46_eff(v11, v12, v13, v14, v15, v16, v10, v17)
+      return retVal
+
+    elif v6[0] == 0:
+      v8 = v6[1]
+      #empty project
+      v9 = self.idris__123_APPLY0_125_(v7, v8)
+      retVal = self.idris__123_APPLY0_125_(v9, v5)
+      return retVal
+
+
+
+def idris_Effects_46_execEff(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10): #Effects.execEff
+    if v8[0] == 0:
+      #empty project
+      if v7[0] == 1:
+        v11 = v7[1]
+        v12 = v7[2]
+        v13 = v7[3]
+        #empty project
+        v14 = 0 #Nothing
+        v15 = 0 #Nothing
+        v16 = 0 #Nothing
+        v17 = 0 #Nothing
+        v18 = 0 #Nothing
+        v19 = 0 #Nothing
+        v14 = self.idris_Effects_46_handle(v14, v15, v16, v17, v18, v19, v11)
+        v14 = self.idris__123_APPLY0_125_(v14, v12)
+        v14 = self.idris__123_APPLY0_125_(v14, v9)
+        v15 = [65704,v10,v11,v13]
+        retVal = self.idris__123_APPLY0_125_(v14, v15)
+        return retVal
+
+    elif v8[0] == 1:
+      v11 = v8[1]
+      #empty project
+      if v7[0] == 1:
+        v12 = v7[1]
+        v13 = v7[2]
+        v14 = v7[3]
+        #empty project
+        v15 = 0 #Nothing
+        v16 = 0 #Nothing
+        v17 = 0 #Nothing
+        v18 = 0 #Nothing
+        v19 = 0 #Nothing
+        v20 = 0 #Nothing
+        v21 = 0 #Nothing
+        v22 = [65706,v10,v12,v13]
+        retVal = self.idris_Effects_46_execEff(v15, v16, v17, v18, v19, v20, v21, v14, v11, v9, v22)
+        return retVal
+
+
+
+
+def idris_Effects_46_handle(v0, v1, v2, v3, v4, v5, v6): #Effects.handle
+    v7 = self.idris__123_APPLY0_125_(v6, v2)
+    v7 = self.idris__123_APPLY0_125_(v7, v3)
+    v7 = self.idris__123_APPLY0_125_(v7, v4)
+    retVal = self.idris__123_APPLY0_125_(v7, v5)
+    return retVal
+
+
+#Prelude.Bool.ifThenElse
+#Prelude.Classes.intToBool
+def idris_io_95_return(v0, v1, v2, v3): #io_return
+    retVal = [0]
+    return retVal
+
+
+#mkForeignPrim
+#prim__eqInt
+#prim__eqManagedPtr
+#prim__eqPtr
+#prim__null
+#prim__readFile
+#prim__registerPtr
+#prim__stderr
+#prim__stdin
+#prim__stdout
+#prim__vm
+#prim__writeFile
+def idris_Prelude_46_Applicative_46_pure(v0, v1, v2): #Prelude.Applicative.pure
+    retVal = self.idris__123_APPLY0_125_(v2, v1)
+    return retVal
+
+
+def idris_Effects_46_rebuildEnv(v0, v1, v2, v3, v4, v5, v6): #Effects.rebuildEnv
+    if v5[0] == 2:
+      v7 = v5[1]
+      #empty project
+      if v6[0] == 1:
+        v8 = v6[1]
+        v9 = v6[2]
+        v10 = v6[3]
+        #empty project
+        v11 = 0 #Nothing
+        v12 = 0 #Nothing
+        v13 = 0 #Nothing
+        v14 = 0 #Nothing
+        v11 = self.idris_Effects_46_rebuildEnv(v11, v12, v13, v14, v4, v7, v10)
+        retVal = [1,v8,v9,v11]
+        return retVal
+
+    elif v5[0] == 1:
+      v7 = v5[1]
+      #empty project
+      if v4[0] == 1:
+        v8 = v4[1]
+        v9 = v4[2]
+        v10 = v4[3]
+        #empty project
+        if v6[0] == 1:
+          v11 = v6[1]
+          v12 = v6[2]
+          v13 = v6[3]
+          #empty project
+          v14 = 0 #Nothing
+          v15 = 0 #Nothing
+          v16 = 0 #Nothing
+          v17 = 0 #Nothing
+          v14 = self.idris_Effects_46_rebuildEnv(v14, v15, v16, v17, v10, v7, v13)
+          retVal = [1,v8,v9,v14]
+          return retVal
+
+      elif v4[0] == 0:
+        #empty project
+        retVal = [0]
+        return retVal
+
+
+    elif v5[0] == 0:
+      #empty project
+      if v4[0] == 1:
+        v7 = v4[1]
+        v8 = v4[2]
+        v9 = v4[3]
+        #empty project
+        retVal = [1,v7,v8,v9]
+        return retVal
+      elif v4[0] == 0:
+        #empty project
+        retVal = v6
+        return retVal
+
+
+
+
+def idris_Effects_46_relabel(v0, v1, v2, v3, v4): #Effects.relabel
+    if v4[0] == 1:
+      v5 = v4[1]
+      v6 = v4[2]
+      v7 = v4[3]
+      #empty project
+      v8 = 0 #Nothing
+      v9 = 0 #Nothing
+      v10 = 0 #Nothing
+      v11 = 0 #Nothing
+      v8 = self.idris_Effects_46_relabel(v8, v9, v10, v11, v7)
+      retVal = [1,v5,v6,v8]
+      return retVal
+    elif v4[0] == 0:
+      #empty project
+      retVal = [0]
+      return retVal
+
+
+
+def idris_Bank_46_Main_46_runDep(v0): #Bank.Main.runDep
+    v1 = 0 #Nothing
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    v4 = 0 #Nothing
+    v5 = [65678]
+    v6 = [65685]
+    v7 = [0]
+    v6 = [1,v6,v0,v7]
+    v7 = 0 #Nothing
+    v8 = 0 #Nothing
+    v9 = 0 #Nothing
+    v10 = 0 #Nothing
+    v11 = 0 #Nothing
+    v7 = 0 #save v7
+
+    retVal = self.idris_Effects_46_runInit(v1, v2, v3, v4, v5, v6, v7)
+    return retVal
+
+
+def idris_Effects_46_runInit(v0, v1, v2, v3, v4, v5, v6): #Effects.runInit
+    v7 = 0 #Nothing
+    v8 = 0 #Nothing
+    v9 = 0 #Nothing
+    v10 = 0 #Nothing
+    v11 = 0 #Nothing
+    v12 = [65708,v4]
+    retVal = self.idris_Effects_46_eff(v7, v8, v9, v10, v11, v5, v6, v12)
+    return retVal
+
+
+def testme():
+    return 10
+
+def idris_Bank_46_Main_46_runWith(v0): #Bank.Main.runWith
+    v1 = 0 #Nothing
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    v4 = 0 #Nothing
+    v5 = [65687]
+    v6 = [65694]
+    v7 = 0
+    v8 = [0]
+    v6 = [1,v6,v7,v8]
+    v7 = 0 #Nothing
+    v7 = self.idris_Bank_46_Bank2_46_withdraw(v0, v7)
+    retVal = self.idris_Effects_46_runInit(v1, v2, v3, v4, v5, v6, v7)
+    return retVal
+
+
+#run__IO
+def idris_Ether_46_save(v0, v1, v2, v3, v4): #Ether.save
+    v5 = [0]
+    v6 = [4]
+    retVal = [2,v5,v6]
+    return retVal
+
+
+def idris_Ether_46_send(v0, v1, v2, v3, v4, v5): #Ether.send
+    v6 = [0]
+    v7 = [5]
+    retVal = [2,v6,v7]
+    return retVal
+
+
+def idris_Ether_46_sender(v0, v1, v2, v3): #Ether.sender
+    v4 = [0]
+    v5 = [3]
+    retVal = [2,v4,v5]
+    return retVal
+
+
+def idris_Effects_46_unlabel(v0, v1, v2, v3, v4): #Effects.unlabel
+    if v4[0] == 1:
+      v5 = v4[1]
+      v6 = v4[2]
+      v7 = v4[3]
+      #empty project
+      v8 = [0]
+      retVal = [1,v5,v6,v8]
+      return retVal
+
+
+
+#unsafePerformPrimIO
+def idris_Bank_46_Bank2_46_withdraw(v0, v1): #Bank.Bank2.withdraw
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    v4 = 0 #Nothing
+    v2 = msg.sender
+    v3 = [65676,v1,v0]
+    retVal = [1,v2,v3]
+    return retVal
+
+
+def idris_Prelude_46_Bool_46__124__124_(v0, v1): #Prelude.Bool.||
+    if v0[0] == 0:
+      #empty project
+      retVal = self.idris__123_EVAL0_125_(v1)
+      return retVal
+    elif v0[0] == 1:
+      #empty project
+      retVal = [1]
+      return retVal
+
+
+
+def idris__123_APPLY0_125_(v0, v1): #{APPLY0}
+    if v0[0] == 65672:
+      #empty project
+      retVal = self.idris_Bank_46_Bank2_46__123_withdraw0_125_(v1)
+      return retVal
+    elif v0[0] == 65673:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Bank2_46__123_withdraw1_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65674:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Bank2_46__123_withdraw3_125_(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65675:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Bank2_46__123_withdraw4_125_(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65676:
+      v2 = v0[1]
+      v3 = v0[2]
+      #empty project
+      retVal = 0 #legohack self.idris_Bank_46_Bank2_46__123_withdraw5_125_(v2, v3, v1)
+      return retVal
+
+    elif v0[0] == 65677:
+      #empty project
+      retVal =0 #lego  self.idris_Bank_46_Main_46__123_runDep0_125_(v1)
+      return retVal
+
+    elif v0[0] == 65678:
+      #empty project
+      retVal =0 #lego  self.idris_Bank_46_Main_46__123_runDep1_125_(v1)
+      return retVal
+
+    elif v0[0] == 65679:
+      v2 = v0[1]
+      v3 = v0[2]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runDep2_125_(v2, v3, v1)
+      return retVal
+
+    elif v0[0] == 65680:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runDep3_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65681:
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runDep4_125_(v1)
+      return retVal
+
+    elif v0[0] == 65682:
+      #empty project
+      retVal = 0 #self.idris_Bank_46_Main_46__123_runDep5_125_(v1)
+      return retVal
+
+    elif v0[0] == 65683:
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runDep6_125_(v1)
+      return retVal
+
+    elif v0[0] == 65684:
+      #empty project
+      retVal = 0 #self.idris_Bank_46_Main_46__123_runDep7_125_(v1)
+      return retVal
+
+    elif v0[0] == 65685:
+      #empty project
+      retVal = 0 #self.idris_Bank_46_Main_46__123_runDep8_125_(v1)
+      return retVal
+
+    elif v0[0] == 65686:
+      #empty project
+      retVal = self.idris_Bank_46_Main_46__123_runWith0_125_(v1)
+      return retVal
+
+    elif v0[0] == 65687:
+      #empty project
+      retVal =0 #lego  self.idris_Bank_46_Main_46__123_runWith1_125_(v1)
+      return retVal
+
+    elif v0[0] == 65688:
+      v2 = v0[1]
+      v3 = v0[2]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runWith2_125_(v2, v3, v1)
+      return retVal
+
+    elif v0[0] == 65689:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Bank_46_Main_46__123_runWith3_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65690:
+      #empty project
+      retVal = 0 #self.idris_Bank_46_Main_46__123_runWith4_125_(v1)
+      return retVal
+
+    elif v0[0] == 65691:
+      #empty project
+      retVal = 0 #self.idris_Bank_46_Main_46__123_runWith5_125_(v1)
+      return retVal
+
+    elif v0[0] == 65692:
+      #empty project
+      retVal = 0 #legohack self.idris_Bank_46_Main_46__123_runWith6_125_(v1)
+      return retVal
+
+    elif v0[0] == 65693:
+      #empty project
+      retVal = 0 #legohack self.idris_Bank_46_Main_46__123_runWith7_125_(v1)
+      return retVal
+
+    elif v0[0] == 65694:
+      #empty project
+      retVal = 0 #legohack self.idris_Bank_46_Main_46__123_runWith8_125_(v1)
+      return retVal
+
+    elif v0[0] == 65695:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      v5 = v0[4]
+      v6 = v0[5]
+      v7 = v0[6]
+      v8 = v0[7]
+      v9 = v0[8]
+      v10 = v0[9]
+      v11 = v0[10]
+      v12 = v0[11]
+      v13 = v0[12]
+      v14 = v0[13]
+      v15 = v0[14]
+      #empty project
+      #retVal = self.idris_Effects_46_eff_95_Effects_95__95_idr_95_283_95_30_95_case(v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v1)
+      retVal = 0 #LEGOHACK
+      return retVal
+
+    elif v0[0] == 65696:
+      v2 = v0[1]
+      v3 = v0[2]
+      #empty project
+      retVal = self.idris_Effects_46__123_eff0_125_(v2, v3, v1)
+      return retVal
+
+    elif v0[0] == 65697:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff1_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65698:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff2_125_(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65699:
+      v2 = v0[1]
+      v3 = v0[2]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff3_125_(v2, v3, v1)
+      return retVal
+
+    elif v0[0] == 65700:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      v5 = v0[4]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff4_125_(v2, v3, v4, v5, v1)
+      return retVal
+
+    elif v0[0] == 65701:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff5_125_(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65702:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_eff6_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65703:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      v5 = v0[4]
+      #empty project
+      retVal = self.idris_Effects_46__123_execEff0_125_(v2, v3, v4, v5, v1)
+      return retVal
+
+    elif v0[0] == 65704:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_execEff1_125_(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65705:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      v5 = v0[4]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_execEff2_125_(v2, v3, v4, v5, v1)
+      return retVal
+
+    elif v0[0] == 65706:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_execEff3_125_(v2, v3, v4, v1)
+      return retVal
+
+#TODO: run*0 fixed. check why
+    elif v0[0] == 65707:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #self.idris_Effects_46__123_runInit0_125_(v2, v1)
+      return retVal
+
+
+
+
+
+
+
+
+
+
+    elif v0[0] == 65708:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Effects_46__123_runInit1_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65709:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #legohack self.idris_Prelude_46_Nat_46__64_Prelude_46_Classes_46_Eq_36_Nat(v2, v1)
+      return retVal
+
+    elif v0[0] == 65710:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #self.idris_Prelude_46_Nat_46__123_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_95_lam0_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65711:
+      #empty project
+      retVal = 0 #lego self.idris_Prelude_46_Nat_46__123_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_95_lam1_125_(v1)
+      return retVal
+
+    elif v0[0] == 65712:
+      v2 = v0[1]
+      #empty project
+      retVal = 0 #lego self.idris_Prelude_46_Nat_46__123_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_95_lam2_125_(v2, v1)
+      return retVal
+
+    elif v0[0] == 65713:
+      #empty project
+      retVal = 0 #lego self.idris_Prelude_46_Nat_46__123_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_95_lam3_125_(v1)
+      return retVal
+
+    elif v0[0] == 65714:
+      v2 = v0[1]
+      v3 = v0[2]
+      v4 = v0[3]
+      #empty project
+      retVal = self.idris_io_95_return(v2, v3, v4, v1)
+      return retVal
+
+    elif v0[0] == 65715:
+      #empty project
+      retVal = [65709,v1]
+      return retVal
+
+    elif True:
+      retVal = 0 #Nothing
+      return retVal
+
+
+
+def idris__123_EVAL0_125_(v0): #{EVAL0}
+    if True:
+      retVal = v0
+      return retVal
+
+
+
+def idris_Prelude_46_Nat_46__123_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_95_lam0_125_(v0, v1): #Prelude.Nat.{Nat instance of Prelude.Classes.Ord_lam0}
+    retVal = 0 #legohackself.idris_Prelude_46_Classes_46_Prelude_46_Nat_46__64_Prelude_46_Classes_46_Ord_36_Nat_58__33_compare_58_0(v0, v1)
+    return retVal
+
+
+def idris_Prelude_46_Classes_46__123_Prelude_46_Nat_46_Nat_32_instance_32_of_32_Prelude_46_Classes_46_Ord_44__32_method_32__62__61__95_lam0_125_(v0, v1): #Prelude.Classes.{Prelude.Nat.Nat instance of Prelude.Classes.Ord, method >=_lam0}
+    retVal = 0 #legohack self.idris_Prelude_46_Classes_46_Prelude_46_Nat_46__64_Prelude_46_Classes_46_Eq_36_Nat_58__33__61__61__58_0(v0, v1)
+    return retVal
+
+
+def idris_Effects_46__123_eff0_125_(v0, v1, v2): #Effects.{eff0}
+    v3 = self.idris__123_APPLY0_125_(v0, v1)
+    v4 = 0 #Nothing
+    v5 = 0 #Nothing
+    v6 = 0 #Nothing
+    v7 = 0 #Nothing
+    v4 = self.idris_Effects_46_relabel(v4, v5, v6, v7, v2)
+    retVal = self.idris__123_APPLY0_125_(v3, v4)
+    return retVal
+
+
+def idris_Effects_46__123_execEff0_125_(v0, v1, v2, v3, v4): #Effects.{execEff0}
+    v5 = self.idris__123_APPLY0_125_(v0, v1)
+    v6 = [1,v2,v4,v3]
+    retVal = self.idris__123_APPLY0_125_(v5, v6)
+    return retVal
+
+
+def idris_Bank_46_Main_46__123_runDep0_125_(v0): #Bank.Main.{runDep0}
+    v1 = 0 #Nothing
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    retVal = [65714,v1,v2,v3]
+    return retVal
+
+
+def idris_Effects_46__123_runInit0_125_(v0, v1): #Effects.{runInit0}
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    v2 = self.idris_Prelude_46_Applicative_46_pure(v2, v3, v0)
+    v3 = 0 #Nothing
+    retVal = self.idris__123_APPLY0_125_(v2, v3)
+    return retVal
+
+
+def idris_Bank_46_Main_46__123_runWith0_125_(v0): #Bank.Main.{runWith0}
+    v1 = 0 #Nothing
+    v2 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    v3 = 0 #Nothing
+    retVal = [65714,v1,v2,v3]
+    return retVal
+
+
+def idris_Bank_46_Bank2_46__123_withdraw0_125_(v0): #Bank.Bank2.{withdraw0}
+    v1 = [1]
+    retVal = [0,v1]
+    return retVal
+
+
