@@ -64,7 +64,6 @@ namespace Main
 
   testList : FFI_Export FFI_Se "testHdr.se" []
   testList = Data Nat "Nat" $
-             Data (List Nat) "ListNat" $
              Data (Bool) "Bool" $
              Fun runDep "deposit" $
              Fun Bank.Main.runWith "withdraw" $

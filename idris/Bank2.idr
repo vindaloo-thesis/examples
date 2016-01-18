@@ -33,25 +33,10 @@ namespace Main
 
   main : SIO ()
   main = return ()
-    --res <- runInit [MkS 0 0 0] (withdraw 100)
-    --putStrLn . show $ res
-  --main = runInit [MkS 10 0 0] (withdraw 0)
 
   testList : FFI_Export FFI_Se "testHdr.se" []
   testList = Data Nat "Nat" $
-             Data (List Nat) "ListNat" $
-             Data (Bool) "Bool" $
+             Data Bool "Bool" $
              Fun runDep "deposit" $
              Fun Bank.Main.runWith "withdraw" $
              End
-{-
-  testList : FFI_Export FFI_Py "testHdr.py" []
-  testList = Data Nat "Nat" $
-             Data (List Nat) "ListNat" $
-             Data (Bool) "Bool" $
-             --Data (TransEff.Eff () [ETH (Init x)] [ETH (Running x 0 x)]) "EffEth" $
-             --Fun deposit "deposit" $
-             Fun runDep "deposit" $
-             Fun Bank.Main.runWith "withdraw" $
-             End
-             -}
