@@ -35,8 +35,8 @@ namespace Main
   runDep : Nat -> SIO ()
   runDep v = runInit [(),MkS v 0 0] deposit
 
-  runWith : Nat -> SIO Bool
-  runWith v = runInit [(),MkS 0 0 0] (withdraw v)
+  runWith : (v : Nat) -> Nat -> {auto p: LTE 0 v} -> SIO Bool
+  runWith v a = runInit [(),MkS v 0 0] (withdraw a)
 
   main : IO ()
   main = return ()
