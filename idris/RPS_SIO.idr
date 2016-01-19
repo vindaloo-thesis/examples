@@ -22,7 +22,6 @@ runCheck = case prim__value == 0 of
                 True  => runInit [(), MkS 0 0 0] check
                 False => return 0
 
-
 testList : FFI_Export FFI_Se "testHdr.se" []
 testList = Data Nat "Nat" $
            Data Bool "Bool" $

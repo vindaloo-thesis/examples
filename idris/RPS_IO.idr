@@ -9,6 +9,6 @@ namespace Main
   main : IO ()
   main = do
     runInit [()] (init)
-    res <- runInit [MkS 10 0 0, ()] (playerChoice 0)
+    res <- runInit [(), MkS 10 0 0] (playerChoice 0)
     putStrLn . show $ res
 
