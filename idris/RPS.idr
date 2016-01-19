@@ -5,7 +5,6 @@ import Effect.State
 import Effect.StdIO
 import Ethereum
 import Data.Vect
-import Decidable.Order
 import Data.HVect
 import Ethereum.Types
 import Ethereum.GeneralStore
@@ -81,37 +80,4 @@ namespace TestContract
                     pureM 3
             else do
               pureM 0
-
-
-namespace Main
-  {-
-  main : IO ()
-  main = do
-    res <- runInit [MkS 10 0 0, ()] (playerChoice 0)
-    putStrLn . show $ res
-    -}
-
-  runInitC : SIO ()
-  runInitC = runInit [()] init
-
-  runPC : Int -> SIO Bool
-  runPC c = case (lte 10 prim__value) of
-                 (Yes p) => runInit [(),MkS prim__value 0 0] (playerChoice c {p})
-                 (No _)  => return False
-
-  runCheck : SIO Int
-  runCheck = case prim__value == 0 of
-                  True  => runInit [(), MkS 0 0 0] check
-                  False => return 0
-
-  main : IO ()
-  main = return ()
-
-  testList : FFI_Export FFI_Se "testHdr.se" []
-  testList = Data Nat "Nat" $
-             Data Bool "Bool" $
-             --Fun runInitC "init" $
-             --Fun runPC "playerChoice" $
-             Fun runCheck "check" $
-             End
 
