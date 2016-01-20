@@ -8,6 +8,9 @@ import Data.Vect
 import Data.HVect
 import Ethereum.Types
 import Ethereum.GeneralStore
+import Ethereum.Environment
+
+%default total
 
 playerCount : Field
 playerCount = EInt "playerCount"
@@ -32,38 +35,37 @@ winner _ _ = 2
 
 namespace TestContract
   init : Eff () [STORE]
-  init = write playerCount 0
+  init = write playerCount 2
 
-  playerChoice : Int -> {v : Nat} -> { auto p : LTE 10 v } ->
+  playerChoice : {s : Address} -> {v : Nat} -> {b : Nat} -> { auto p : LTE 10 v } -> {auto pp : LTE v b} -> {auto ppp : LTE (minus v 10) b} ->
+                 Int ->
                  Eff Bool
-                 [STORE, ETH_IN v]
+                 [STORE, ETH v b, ENV c s o]
                  (\succ => if succ
-                              then [STORE, ETH_OUT v (v-10) 10]
-                              else [STORE, ETH_OUT v v 0])
-  playerChoice {v} c = do
+                              then [STORE, ETH v (b-(v-10)), ENV c s o]
+                              else [STORE, ETH v (b-v), ENV c s o])
+  playerChoice {v} {s} c = do
     pc <- read playerCount
     if pc < 2
      then do
-        save 10
-        write players pc !sender
+        write players pc s
         write moves pc c
         write playerCount (pc+1)
-        send (v-10) !sender
+        send (v-10) s {p=pp}
         pureM True
       else do
-        s <- sender
-        send v s
+        send v s {p=pp}
         pureM False
 
   --0 : not enough players joined, or invalid value
   --1 : player 1
   --2 : player 2
   --3 : draw
-  check : Eff Int
-          [STORE, ETH_IN 0]
+  check : {b : Nat} -> {auto p: LTE 20 b} -> Eff Int
+          [STORE, ETH 0 b]
           (\winner => if winner == 0
-                         then [STORE, ETH_OUT 0 0 0]
-                         else [STORE, ETH_OUT 0 20 0])
+                         then [STORE, ETH 0 b]
+                         else [STORE, ETH 0 (b-20)])
   check = if !(read playerCount) == 2
              then do
                let w = winner !(read moves 0) !(read moves 1)
@@ -75,8 +77,8 @@ namespace TestContract
                     send 20 !(read players 1)
                     pureM 2
                   otherwise => do --draw
-                    send 10 !(read players 0)
-                    send 10 !(read players 1)
+                    send 10 !(read players 0) {p}
+                    send 10 !(read players 1) {p}
                     pureM 3
             else do
               pureM 0
