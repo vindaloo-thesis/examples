@@ -1,12 +1,11 @@
 Samle Idris Ethereum smart contracts
 ------------------------------------
+Sample contracts to show how to use [Idris](http://www.idris-lang.org/) as a smart contract language for the [Ethereum](https://ethereum.org/) platform.
 
-Sample contracts to show how to use Idris as a smart contract language for the [Ethereum]() platform.
 
 Prerequisites
 -------------
-
-* Idris (tested against 0.9.20.1) with FFI support
+* [Idris](https://github.com/idris-lang/Idris-dev/) (tested against 0.9.20.1) with FFI support
 * [Serpent back end for Idris](https://github.com/vindaloo-thesis/idris-se)
 * [Serpent](https://github.com/ethereum/serpent) (tested against 2.0.2) or [pyethereum]
 
@@ -18,7 +17,6 @@ For compiling to actual EVM code (not yet fully possible due to back end output 
 
 Building
 --------
-
 For example, building the Rock-Paper-Scissors sample. Assuming `idris-se` and `examples` are checked out in the same directory.
 
 Compiling to Serpent and then to LLL:
