@@ -9,29 +9,28 @@ import Ethereum.Types
 
 %default total
 
+owner : Address
+owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+
 namespace Bank2
-  deposit : {v : Nat} -> Eff () [ETH v b]
+  deposit : {v : Nat} -> Eff () [ETH v b t s]
   deposit {v} = return ()
 
-  withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff Bool
-             [ETH 0 b, ENV c 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf o]
-             (\success => if success
-                             then [ETH 0 (b-a), ENV c 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf o]
-                             else [ETH 0 b,     ENV c 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf o])
-  withdraw a = if !(balance !contractAddress) >= a
-                  then do
-                    send a !sender
-                    pureM True
-                  else (pureM False)
+  withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff ()
+             [ETH_IN 0 b, ENV c owner o]
+             [ETH_OUT 0 b a 0, ENV c owner o]
+  withdraw a = send a owner
 
 namespace Main
   runDep : Nat -> SIO ()
-  runDep v = runInit [MkS v 0] deposit
+  runDep v = runInit [MkS prim__value 0 0 0] deposit
 
   runWith : Nat -> SIO Bool
   runWith a = case (lte a prim__balance) of
                    (Yes p) => case prim__value == 0 of
-                                   True => runInit [MkS 0 prim__balance, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a {p})
+                                   True => do
+                                     runInit [MkS 0 prim__balance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a {p})
+                                     return True
                                    False => return False
                    (No _)  => return False
 
