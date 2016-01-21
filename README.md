@@ -7,7 +7,7 @@ Prerequisites
 -------------
 * [Idris](https://github.com/idris-lang/Idris-dev/) (tested against 0.9.20.1) with FFI support
 * [Serpent back end for Idris](https://github.com/vindaloo-thesis/idris-se)
-* [Serpent](https://github.com/ethereum/serpent) (tested against 2.0.2) or [pyethereum]
+* [Serpent](https://github.com/ethereum/serpent) (tested against 2.0.2)
 
 For compiling to actual EVM code (not yet fully possible due to back end output size), you need either:
 
