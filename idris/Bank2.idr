@@ -1,11 +1,9 @@
 module Bank
+
 import Effects
 import Decidable.Order
 import Ethereum
-import Ethereum.Ether
-import Ethereum.Environment
 import Ethereum.SIO
-import Ethereum.Types
 
 %default total
 

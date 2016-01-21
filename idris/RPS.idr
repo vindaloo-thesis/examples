@@ -1,14 +1,7 @@
 module Transactions
 
 import Effects
-import Effect.State
-import Effect.StdIO
 import Ethereum
-import Data.Vect
-import Data.HVect
-import Ethereum.Types
-import Ethereum.GeneralStore
-import Ethereum.Environment
 
 %default total
 

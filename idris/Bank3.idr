@@ -3,9 +3,8 @@ module Bank
 import Effects
 import Ethereum
 import Ethereum.SIO
-import Ethereum.Types
-import Ethereum.Environment
-import Ethereum.GeneralStore
+
+%default total
 
 address1 : Field
 address1 = EInt "address1"
