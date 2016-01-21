@@ -1,42 +1,51 @@
 module Bank
 
 import Effects
+import Decidable.Order
 import Ethereum
 import Ethereum.Types
 import Ethereum.GeneralStore
+import Ethereum.Environment
+import Ethereum.SIO
+
+%default total
 
 balances : MapField
 balances = EMIntInt "balances"
 
 namespace Bank
   deposit : {v : Nat} -> TransEff.Eff ()
-            [STORE, ETH (Init v)]
-            [STORE, ETH (Running v 0 v)]
-  deposit {v} = do
-    b <- read balances !sender
-    write balances !sender (b+(toIntNat v))
+            [STORE, ETH_IN  v b, ENV c s o]
+            [STORE, ETH_OUT v b 0 v, ENV c s o]
+  deposit {v} {s} = do
+    b <- read balances s
+    write balances s (b+(toIntNat v))
     save v
 
   withdraw : (a : Nat) -> Eff Bool
-             [STORE, ETH (Init 0)]
+             [STORE, ETH_IN 0 b, ENV c s o]
              (\success => if success
-                             then [STORE, ETH (Running 0 a 0)]
-                             else [STORE, ETH (Running 0 0 0)])
-  withdraw a = do
-    b <- read balances !sender
+                             then [STORE, ETH_OUT 0 b a 0, ENV c s o]
+                             else [STORE, ETH_OUT 0 b 0 0, ENV c s o])
+  withdraw a {s} = do
+    b <- read balances s
     if b >= (toIntNat a)
        then do
-         write balances !sender (b-(toIntNat a))
-         send a !sender
+         write balances s (b-(toIntNat a))
+         send a s
          pureM True
        else (pureM False)
 
 namespace Main
-  runDep : Nat -> SIO ()
-  runDep v = runInit [(),MkS v 0 0] deposit
+  runDep : SIO ()
+  runDep = runInit [(), MkS prim__value prim__balance 0 0, MkE 0x1 0x2 0x2] deposit
 
-  runWith : (v : Nat) -> Nat -> {auto p: LTE 0 v} -> SIO Bool
-  runWith v a = runInit [(),MkS v 0 0] (withdraw a)
+  runWith : Nat -> SIO Bool
+  runWith a = case prim__value == 0 of
+                   True => do
+                     runInit [(), MkS 0 prim__balance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a)
+                     return True
+                   False => return False
 
   main : IO ()
   main = return ()

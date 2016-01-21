@@ -41,7 +41,8 @@ namespace Bank
           send v s
           pureM False
     
-  withdraw : (a : Nat) -> DepEff.Eff Bool
+  withdraw : (a : Nat) ->
+             DepEff.Eff Bool
              [STORE, ETH_IN 0 b, ENV c s o]
              (\success => if success
                              then [STORE, ETH_OUT 0 b a 0, ENV c s o]
@@ -54,7 +55,7 @@ namespace Bank
                                   send a s
                                   pureM True
                                 else (pureM False)
-         otherwise => case s == !(read address2) of
+         _    => case s == !(read address2) of
                            True => if !(read balance2) >= toIntNat a
                                                   then do
                                                     update balance2 (\b => b - toIntNat a)
@@ -68,7 +69,11 @@ namespace Main
   runDep = runInit [(),MkS prim__value prim__balance 0 0, MkE 0x1 0x2 0x2] deposit
 
   runWith : Nat -> SIO Bool
-  runWith a = runInit [(),MkS 0 prim__balance 0 0, MkE 0x1 0x2 0x2] (withdraw a)
+  runWith a = case prim__value == 0 of
+                   True => do
+                     runInit [(), MkS 0 prim__balance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a)
+                     return True
+                   False => return False
 
   main : IO ()
   main = return ()
