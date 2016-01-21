@@ -37,13 +37,13 @@ namespace TestContract
   init : Eff () [STORE]
   init = write playerCount 2
 
-  playerChoice : {s : Address} -> {v : Nat} -> {b : Nat} -> { auto p : LTE 10 v } -> {auto pp : LTE v b} -> {auto ppp : LTE (minus v 10) b} ->
+  playerChoice : {s : Address} -> {v : Nat} -> {b : Nat} -> { auto p : LTE 10 v } -> 
                  Int ->
                  Eff Bool
                  [STORE, ETH_IN v b, ENV c s o]
                  (\succ => if succ
                               then [STORE, ETH_OUT v b (v-10) 10, ENV c s o]
-                              else [STORE, ETH_OUT v b v 0, ENV c s o])
+                              else [STORE, ETH_OUT v b v 0      , ENV c s o])
   playerChoice {v} {s} c = do
     pc <- read playerCount
     if pc < 2
