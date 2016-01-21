@@ -21,16 +21,25 @@ balance2 = EInt "balance2"
 
 namespace Bank
   -- TODO: ether leak
-  deposit : {v : Nat} -> TransEff.Eff ()
+  deposit : {v : Nat} -> DepEff.Eff Bool
             [STORE, ETH_IN v b, ENV c s o]
-            [STORE, ETH_OUT v b 0 v, ENV c s o]
+            (\success => if success
+                           then [STORE, ETH_OUT v b 0 v, ENV c s o]
+                           else [STORE, ETH_OUT v b v 0, ENV c s o])
   deposit {v} {s} = do
     if !(read address1) == s
-      then update balance1 (+ toIntNat v)
+      then do
+        update balance1 (+ toIntNat v)
+        save v
+        pureM True
       else if !(read address2) == s
-        then update balance2 (+ toIntNat v)
-        else return ()
-    save v
+        then do
+          update balance2 (+ toIntNat v)
+          save v
+          pureM True
+        else do
+          send v s
+          pureM False
     
   withdraw : (a : Nat) -> DepEff.Eff Bool
              [STORE, ETH_IN 0 b, ENV c s o]
@@ -55,7 +64,7 @@ namespace Bank
                            otherwise => (pureM False)
 
 namespace Main
-  runDep : SIO ()
+  runDep : SIO Bool
   runDep = runInit [(),MkS prim__value prim__balance 0 0, MkE 0x1 0x2 0x2] deposit
 
   runWith : Nat -> SIO Bool
