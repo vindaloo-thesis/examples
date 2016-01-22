@@ -18,7 +18,7 @@ namespace Bank3
   deposit {v} = save v
 
   withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff Bool
-             [ETH_IN  0 b,     ENV c s o]
+             [ETH_IN 0 b, ENV c s o]
              (\success => if success
                              then [ETH_OUT 0 b a 0, ENV c s o]
                              else [ETH_OUT 0 b 0 0, ENV c s o])
