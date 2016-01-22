@@ -19,14 +19,12 @@ balance2 : Field
 balance2 = EInt "balance2"
 
 namespace Bank
-  -- TODO: ether leak
   deposit : {v : Nat} -> DepEff.Eff Bool
             [STORE, ETH_IN v b, ENV c s o]
             (\success => if success
                            then [STORE, ETH_OUT v b 0 v, ENV c s o]
                            else [STORE, ETH_OUT v b v 0, ENV c s o])
-  deposit {v} {s} = do
-    if !(read address1) == s
+  deposit {v} {s} = if !(read address1) == s
       then do
         update balance1 (+ toIntNat v)
         save v

@@ -7,17 +7,26 @@ import Ethereum.SIO
 
 %default total
 
-owner : Address
-owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+owner1 : Address
+owner1 = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
 
-namespace Bank2
+owner2 : Address
+owner2 = 0x004a7617b84d4ece1728ef7809bc844356a897ba
+
+namespace Bank3
   deposit : {v : Nat} -> Eff () [ETH_IN v b] [ETH_OUT v b 0 v]
   deposit {v} = save v
 
-  withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff ()
-             [ETH_IN  0 b,     ENV c owner o]
-             [ETH_OUT 0 b a 0, ENV c owner o]
-  withdraw a = send a owner
+  withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff Bool
+             [ETH_IN  0 b,     ENV c s o]
+             (\success => if success
+                             then [ETH_OUT 0 b a 0, ENV c s o]
+                             else [ETH_OUT 0 b 0 0, ENV c s o])
+  withdraw a {s} = if s == owner1 || s == owner2
+                      then do
+                        send a s
+                        pureM True
+                      else pureM False
 
 namespace Main
   runDep : Nat -> SIO ()
