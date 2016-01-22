@@ -11,8 +11,8 @@ owner : Address
 owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
 
 namespace Bank2
-  deposit : {v : Nat} -> Eff () [ETH v b t s]
-  deposit {v} = return ()
+  deposit : {v : Nat} -> Eff () [ETH_IN v b] [ETH_OUT v b 0 v]
+  deposit {v} = save v
 
   withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff ()
              [ETH_IN 0 b, ENV c owner o]
