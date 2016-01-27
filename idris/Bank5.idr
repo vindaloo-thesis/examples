@@ -12,18 +12,18 @@ balances = EMIntInt "balances"
 
 namespace Bank
   deposit : {v : Nat} -> TransEff.Eff ()
-            [STORE, ETH_IN  v b, ENV c s o]
-            [STORE, ETH_OUT v b 0 v, ENV c s o]
+            [STORE, ETH v b 0 0, ENV c s o]
+            [STORE, ETH v b 0 v, ENV c s o]
   deposit {v} {s} = do
     b <- read balances s
     write balances s (b+(toIntNat v))
     save v
 
   withdraw : (a : Nat) -> Eff Bool
-             [STORE, ETH_IN 0 b, ENV c s o]
+             [STORE, ETH 0 b 0 0, ENV c s o]
              (\success => if success
-                             then [STORE, ETH_OUT 0 b a 0, ENV c s o]
-                             else [STORE, ETH_OUT 0 b 0 0, ENV c s o])
+                             then [STORE, ETH 0 b a 0, ENV c s o]
+                             else [STORE, ETH 0 b 0 0, ENV c s o])
   withdraw a {s} = do
     b <- read balances s
     if b >= (toIntNat a)
@@ -35,12 +35,12 @@ namespace Bank
 
 namespace Main
   runDep : SIO ()
-  runDep = runInit [(), MkS prim__value prim__balance 0 0, MkE 0x1 0x2 0x2] deposit
+  runDep = runInit [(), MkS prim__value prim__selfbalance 0 0, MkE 0x1 0x2 0x2] deposit
 
   runWith : Nat -> SIO Bool
   runWith a = case prim__value == 0 of
                    True => do
-                     runInit [(), MkS 0 prim__balance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a)
+                     runInit [(), MkS 0 prim__selfbalance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a)
                      return True
                    False => return False
 
