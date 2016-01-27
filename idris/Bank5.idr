@@ -8,7 +8,7 @@ import Ethereum.SIO
 %default total
 
 balances : MapField
-balances = EMIntInt "balances"
+balances = EMAddressInt "balances"
 
 namespace Bank
   deposit : {v : Nat} -> Eff ()
