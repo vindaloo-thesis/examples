@@ -16,7 +16,7 @@ namespace Bank
             [STORE, ETH v b 0 v, ENV c s o]
   deposit {v} {s} = do
     b <- read balances s
-    write balances s (b+(toIntNat v))
+    write balances s (b+v)
     save v
 
   withdraw : (a : Nat) -> Eff Bool
@@ -26,9 +26,9 @@ namespace Bank
                              else [STORE, ETH 0 b 0 0, ENV c s o])
   withdraw a {s} = do
     b <- read balances s
-    if b >= (toIntNat a)
+    if b >= a
        then do
-         write balances s (b-(toIntNat a))
+         write balances s (b-a)
          send a s
          pureM True
        else (pureM False)

@@ -26,12 +26,12 @@ namespace Bank
                            else [STORE, ETH v b v 0, ENV c s o])
   deposit {v} {s} = if !(read address1) == s
       then do
-        update balance1 (+ toIntNat v)
+        update balance1 (+ v)
         save v
         pureM True
       else if !(read address2) == s
         then do
-          update balance2 (+ toIntNat v)
+          update balance2 (+ v)
           save v
           pureM True
         else do
@@ -46,16 +46,16 @@ namespace Bank
                              else [STORE, ETH 0 b 0 0, ENV c s o])
   withdraw a {s} = do
     case s == !(read address1) of  --case because doesn't type check with ifs. ¯\_(ツ)_/¯
-         True => if !(read balance1) >= toIntNat a
+         True => if !(read balance1) >= a
                                 then do
-                                  update balance1 (\b => b - toIntNat a)
+                                  update balance1 (\b => b - a)
                                   send a s
                                   pureM True
                                 else (pureM False)
          _    => case s == !(read address2) of
-                           True => if !(read balance2) >= toIntNat a
+                           True => if !(read balance2) >= a
                                                   then do
-                                                    update balance2 (\b => b - toIntNat a)
+                                                    update balance2 (\b => b - a)
                                                     send a s
                                                     pureM True
                                                   else (pureM False)
