@@ -7,11 +7,10 @@ import Ethereum.SIO
 
 %default total
 
-Owner1 : Address
-Owner1 = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
-
-Owner2 : Address
-Owner2 = 0x004a7617b84d4ece1728ef7809bc844356a897ba
+Owners : List Address
+Owners = [0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+         ,0x004a7617b84d4ece1728ef7809bc844356a897ba
+         ]
 
 namespace Bank3
   deposit : {v : Nat} -> Eff () [ETH v b 0 0] [ETH v b 0 v]
@@ -22,7 +21,7 @@ namespace Bank3
              (\success => if success
                              then [ETH 0 b a 0, ENV c s o]
                              else [ETH 0 b 0 0, ENV c s o])
-  withdraw a {s} = if s == Owner1 || s == Owner2
+  withdraw a {s} = if s `elem` Owners 
                       then do
                         send a s
                         pureM True
