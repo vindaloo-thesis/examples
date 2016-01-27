@@ -11,7 +11,7 @@ balances : MapField
 balances = EMAddressInt "balances"
 
 namespace Bank
-  deposit : {v : Nat} -> Eff ()
+  deposit : Eff ()
             [STORE, ETH v b 0 0, ENV c s o]
             [STORE, ETH v b 0 v, ENV c s o]
   deposit {s} {v} = do
