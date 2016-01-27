@@ -7,30 +7,30 @@ import Ethereum.SIO
 
 %default total
 
-owner : Address
-owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+Owner : Address
+Owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
 
 namespace Bank2
   deposit : {v : Nat} -> Eff () [ETH v b 0 0] [ETH v b 0 v]
   deposit {v} = save v
 
   withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff ()
-             [ETH  0 b 0 0,     ENV c owner o]
-             [ETH 0 b a 0, ENV c owner o]
-  withdraw a = send a owner
+             [ETH 0 b 0 0, ENV c Owner o]
+             [ETH 0 b a 0, ENV c Owner o]
+  withdraw a = send a Owner
 
 namespace Main
     runDep : SIO ()
-    runDep = runInit [MkS (toNat prim__value) 0 0 0] deposit
+    runDep = runInit [MkS prim__value 0 0 0] deposit
 
     main : SIO ()
     main = return ()
 
     runWith : Nat -> SIO Bool
-    runWith a = case (lte a (toNat prim__selfbalance)) of
+    runWith a = case (lte a prim__selfbalance) of
                      (Yes p) => case prim__value == 0 of
                                      True => do
-                                       runInit [MkS 0 (toNat prim__selfbalance) 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a {p})
+                                       runInit [MkS 0 prim__selfbalance 0 0, MkE 0 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf 0] (withdraw a {p})
                                        return True
                                      False => return False
                      (No _)  => return False
