@@ -5,7 +5,7 @@ Sample contracts to show how to use [Idris](http://www.idris-lang.org/) as a sma
 
 Prerequisites
 -------------
-* [Idris](https://github.com/idris-lang/Idris-dev/) (tested against 0.9.20.1) with FFI support
+* [Idris](https://github.com/idris-lang/Idris-dev/) (tested against 0.10) with FFI support
 * [Serpent back end for Idris](https://github.com/vindaloo-thesis/idris-se)
 * [Serpent](https://github.com/ethereum/serpent) (tested against 2.0.2)
 
