@@ -4,11 +4,10 @@ import Effects
 import Ethereum
 import Ethereum.SIO
 
-namespace Bank
-  deposit : {v : Nat} -> TransEff.Eff () 
-            [ETH v b 0 0]
-            [ETH v b 0 v]
-  deposit {v} = save v
+deposit : TransEff.Eff () 
+          [ETH v b 0 0]
+          [ETH v b 0 v]
+deposit {v} = save v
 
 namespace Main
   runDep : SIO ()

@@ -12,20 +12,19 @@ Owners = [0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
          ,0x004a7617b84d4ece1728ef7809bc844356a897ba
          ]
 
-namespace Bank3
-  deposit : {v : Nat} -> Eff () [ETH v b 0 0] [ETH v b 0 v]
-  deposit {v} = save v
+deposit : Eff () [ETH v b 0 0] [ETH v b 0 v]
+deposit {v} = save v
 
-  withdraw : (a : Nat) -> {b : Nat} -> {auto p: LTE a b} -> Eff Bool
-             [ETH 0 b 0 0, ENV c s o]
-             (\success => if success
-                             then [ETH 0 b a 0, ENV c s o]
-                             else [ETH 0 b 0 0, ENV c s o])
-  withdraw a {s} = if s `elem` Owners 
-                      then do
-                        send a s
-                        pureM True
-                      else pureM False
+withdraw : (a : Nat) -> {auto p: LTE a b} -> Eff Bool
+           [ETH 0 b 0 0, ENV c s o]
+           (\success => if success
+                           then [ETH 0 b a 0, ENV c s o]
+                           else [ETH 0 b 0 0, ENV c s o])
+withdraw a {s} = if s `elem` Owners 
+                    then do
+                      send a s
+                      pureM True
+                    else pureM False
 
 namespace Main
   runDep : Nat -> SIO ()
