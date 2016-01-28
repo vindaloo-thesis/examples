@@ -61,6 +61,7 @@ check : {auto p: LTE 20 b} -> Eff Int
                        else [STORE, ETH 0 b 20 0])
 check = if !(read playerCount) == 2
            then do
+             write playerCount 0
              let w = winner !(read moves 0) !(read moves 1)
              case w of 
                 0 => do --player 1 wins
@@ -73,6 +74,4 @@ check = if !(read playerCount) == 2
                   send 10 !(read players 0)
                   send 10 !(read players 1)
                   pureM 3
-              write playerCount 0
-          else do
-            pureM 0
+          else pureM 0
