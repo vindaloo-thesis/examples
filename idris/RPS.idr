@@ -9,7 +9,7 @@ playerCount : Field
 playerCount = EInt "playerCount"
 
 players : MapField
-players = EMIntInt "players"
+players = EMIntAddress "players"
 
 moves : MapField
 moves = EMIntInt "moves"
@@ -36,17 +36,17 @@ playerChoice : {auto p : LTE 10 v} ->
                (\succ => if succ
                             then [STORE, ETH v b (v-10) 10, ENV c s o]
                             else [STORE, ETH v b v 0      , ENV c s o])
-playerChoice {v} {s} c = do
+playerChoice {v} {s} move = do
   pc <- read playerCount
   if pc < 2
    then do
       write players pc s
-      write moves pc c
+      write moves pc move
       write playerCount (pc+1)
       save 10
       send (v-10) s
       pureM True
-    else do
+    else do --If the game is full, return ether
       send v s
       pureM False
 
