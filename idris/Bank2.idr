@@ -1,6 +1,5 @@
 module Bank
 
-import Effects
 import Ethereum
 
 %default total
