@@ -3,8 +3,6 @@ module Main
 import Bank5
 import Ethereum.SIO
 
-%default total
-
 runDeposit : SIO ()
 runDeposit = runInit [(), MkS prim__value prim__selfbalance 0 0, MkE 0x1 0x2 0x2] deposit
 

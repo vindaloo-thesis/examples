@@ -3,8 +3,6 @@ module Transactions
 import Effects
 import Ethereum
 
-%default total
-
 playerCount : Field
 playerCount = EInt "playerCount"
 
