@@ -5,8 +5,10 @@ io:
 	$(call compile_io,RPS)
 	$(call compile_io,Bank)
 	$(call compile_io,Bank2)
+	$(call compile_io,Bank3)
 
 sio:
+	$(call compile_sio,Bank3)
 	$(call compile_sio,RPS)
 	$(call compile_sio,Bank)
 	$(call compile_sio,Bank2)
