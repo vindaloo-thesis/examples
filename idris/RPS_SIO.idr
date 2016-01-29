@@ -1,8 +1,6 @@
 module Main
 
 import Decidable.Order
-import Effects
-import Ethereum
 import Ethereum.SIO
 import RPS
 

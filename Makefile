@@ -4,7 +4,9 @@ compile_sio = idris -p effects -p contrib idris/$(1)_SIO.idr -i ../idris-se/lib 
 io:
 	$(call compile_io,RPS)
 	$(call compile_io,Bank)
+	$(call compile_io,Bank2)
 
 sio:
 	$(call compile_sio,RPS)
 	$(call compile_sio,Bank)
+	$(call compile_sio,Bank2)

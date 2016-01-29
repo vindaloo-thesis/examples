@@ -1,7 +1,6 @@
 module RPS_IO
 
 import Effects
-import Ethereum
 import Ethereum.IO
 import RPS
 
