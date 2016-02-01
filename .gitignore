@@ -3,6 +3,7 @@
 dist
 *.ibc
 EINT*
-EMINT*
+EMI*
+EMA*
 EADDRESS*
 EMADDRESS*
