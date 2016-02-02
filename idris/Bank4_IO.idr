@@ -1,7 +1,7 @@
 module Main
 
 import Ethereum.IO
-import Bank5
+import Bank4
 
 Alice : Address
 Alice = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf

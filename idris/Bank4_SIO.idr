@@ -1,6 +1,6 @@
 module Main
 
-import Bank5
+import Bank4
 import Ethereum.SIO
 
 runDeposit : SIO ()
@@ -18,9 +18,8 @@ runWithdraw amount = if prim__value == 0
 main : IO ()
 main = return ()
 
-exports : FFI_Export FFI_Se "defs.se" []
+exports : FFI_Export FFI_Se "" []
 exports = Data Nat "Nat" $
-          Data (Bool) "Bool" $
           Fun runDeposit "deposit" $
           Fun runWithdraw "withdraw" $
           End
