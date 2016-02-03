@@ -17,6 +17,30 @@ sio:
 	$(call compile_sio,Bank4)
 	$(call compile_sio,RPS)
 
+bank_sio:
+	$(call compile_sio,Bank)
+
+bank2_sio:
+	$(call compile_sio,Bank2)
+
+bank3_sio:
+	$(call compile_sio,Bank3)
+
+rps_sio:
+	$(call compile_sio,RPS)
+
+bank_io:
+	$(call compile_io,Bank)
+
+bank2_io:
+	$(call compile_io,Bank2)
+
+bank3_io:
+	$(call compile_io,Bank3)
+
+rps_io:
+	$(call compile_io,RPS)
+
 clean:
 	rm dist/*
 	rm **/**.ibc
