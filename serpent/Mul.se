@@ -1,0 +1,27 @@
+
+macro idris_Mul_46_mul2($a0, $a1): #Mul.mul2
+  v_3d961f3c = $a0
+  v_b2129184 = $a1
+  v_268f03cd = 2
+  v_268f03cd = (v_3d961f3c * v_268f03cd)
+  out = [0,v_268f03cd]
+
+
+macro idris_Main_46_runMul2($a0): #Main.runMul2
+  v_3676442 = $a0
+  v_69ebf670 = 0 #Nothing
+  v_d070889e = 0 #Nothing
+  v_36f51acd = 0 #Nothing
+  v_62865305 = 0 #Nothing
+  v_fc01c0d6 = [65671]
+  v_957d2ea8 = [0]
+  v_2ef89c7a = [65608]
+  idris_Mul_46_mul2(v_3676442, v_2ef89c7a)
+
+#exports:
+#exported: Main.runMul2 mul2
+def mul2(v0): #1
+  idris_Main_46_runMul2(v0)
+  return out[1]
+#/exports
+
