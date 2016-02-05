@@ -1,0 +1,142 @@
+
+
+macro idris_Effects_46_eff($a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7): #Effects.eff
+  v_ae15978 = $a0
+  v_3c8846a0 = $a1
+  v_6e2f33c8 = $a2
+  v_9fd620f0 = $a3
+  v_d17d0e18 = $a4
+  v_323fb41 = $a5
+  v_34cae869 = $a6
+  v_6671d591 = $a7
+    
+  if v_34cae869[0] == 0:
+    v_9818c2b9 = v_34cae869[1]
+
+    idris__123_APPLY0_125_(v_6671d591, v_9818c2b9)
+    v_c9bfafe1 = out
+    idris__123_APPLY0_125_(v_c9bfafe1, v_323fb41)
+    
+
+
+macro idris_Mul_46_mul2($a0, $a1): #Mul.mul2
+  v_3d961f3c = $a0
+  v_b2129184 = $a1
+  v_268f03cd = 2
+  v_268f03cd = (v_3d961f3c * v_268f03cd)
+  out = [0,v_268f03cd]
+
+
+macro idris_Prelude_46_Applicative_46_pure($a0, $a1, $a2): #Prelude.Applicative.pure
+  v_4ddb540f = $a0
+  v_5b514d8e = $a1
+  v_9738b8f2 = $a2
+  idris__123_APPLY0_125_(v_9738b8f2, v_5b514d8e)
+  
+
+
+macro idris_Effects_46_runInit($a0, $a1, $a2, $a3, $a4, $a5, $a6): #Effects.runInit
+  v_d30dc8d = $a0
+  v_4afbda67 = $a1
+  v_a328915b = $a2
+  v_4aab7b1 = $a3
+  v_5381ff43 = $a4
+  v_abaeb637 = $a5
+  v_fc2492d4 = $a6
+  v_a3f7dbe0 = 0 #Nothing
+  v_b434db13 = 0 #Nothing
+  v_f39e6df8 = 0 #Nothing
+  v_9b71b704 = 0 #Nothing
+  v_bcbaffef = 0 #Nothing
+  v_14e7b6e4 = [65669,v_5381ff43]
+  idris_Effects_46_eff(v_a3f7dbe0, v_b434db13, v_f39e6df8, v_9b71b704, v_bcbaffef, v_abaeb637, v_fc2492d4, v_14e7b6e4)
+  
+
+
+macro idris_Main_46_runMul2($a0): #Main.runMul2
+  v_3676442 = $a0
+  v_69ebf670 = 0 #Nothing
+  v_d070889e = 0 #Nothing
+  v_36f51acd = 0 #Nothing
+  v_62865305 = 0 #Nothing
+  v_fc01c0d6 = [65671]
+  v_957d2ea8 = [0]
+  v_2ef89c7a = [65608]
+  idris_Mul_46_mul2(v_3676442, v_2ef89c7a)
+  v_2ef89c7a = out
+  idris_Effects_46_runInit(v_69ebf670, v_d070889e, v_36f51acd, v_62865305, v_fc01c0d6, v_957d2ea8, v_2ef89c7a)
+  
+
+
+macro idris__123_APPLY0_125_($a0, $a1): #{APPLY0}
+  v_cf9a42a6 = $a0
+  v_4416b4ef = $a1
+
+  if v_cf9a42a6[0] == 65668:
+    v_b8932737 = v_cf9a42a6[1]
+    v_2d0f9980 = v_cf9a42a6[2]
+
+    idris_Effects_46__123_runInit0_125_(v_b8932737, v_2d0f9980, v_4416b4ef)
+    
+
+  elif v_cf9a42a6[0] == 65669:
+    v_b8932737 = v_cf9a42a6[1]
+
+    idris_Effects_46__123_runInit1_125_(v_b8932737, v_4416b4ef)
+    
+
+  elif v_cf9a42a6[0] == 65670:
+
+    idris_Main_46__123_runMul20_125_(v_4416b4ef)
+    
+
+  elif v_cf9a42a6[0] == 65671:
+
+    idris_Main_46__123_runMul21_125_(v_4416b4ef)
+    
+
+  elif True:
+    out = 0 #Nothing
+
+
+macro idris_Effects_46__123_runInit0_125_($a0, $a1, $a2): #Effects.{runInit0}
+  v_b1363c87 = $a0
+  v_2bc88c9e = $a1
+  v_8c755c4 = $a2
+  v_e5c61ee9 = 0 #Nothing
+  v_3d3b17f1 = 0 #Nothing
+  idris_Prelude_46_Applicative_46_pure(v_e5c61ee9, v_3d3b17f1, v_b1363c87)
+  v_e5c61ee9 = out
+  idris__123_APPLY0_125_(v_e5c61ee9, v_2bc88c9e)
+  
+
+
+macro idris_Main_46__123_runMul20_125_($a0): #Main.{runMul20}
+  v_5e8ff4a2 = $a0
+  out = [1,v_5e8ff4a2]
+
+
+
+
+macro idris_Effects_46__123_runInit1_125_($a0, $a1): #Effects.{runInit1}
+  v_b1363c66 = $a0
+  v_2bc88cbf = $a1
+  out = [65668,v_b1363c66,v_2bc88cbf]
+
+
+macro idris_Main_46__123_runMul21_125_($a0): #Main.{runMul21}
+  v_5e8ff481 = $a0
+  out = [65670]
+
+
+
+#exports:
+#exported: Main.runMul2 mul2
+def mul2(v0): #1
+  idris_Main_46_runMul2(v0)
+  if out[0] == 0:
+    return 255
+  return out[1]
+
+#/exports
+
