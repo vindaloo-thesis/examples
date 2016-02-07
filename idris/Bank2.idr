@@ -5,7 +5,7 @@ import Ethereum
 %default total
 
 Owner : Address
-Owner = 0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+Owner = 0xead301dc6b949faf4a5c4a14174611574a884845
 
 deposit : Eff () [ETH v b 0 0] [ETH v b 0 v]
 deposit {v} = save v

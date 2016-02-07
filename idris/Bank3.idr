@@ -5,7 +5,7 @@ import Ethereum
 %default total
 
 Owners : List Address
-Owners = [0x00cf7667b8dd4ece1728ef7809bc844a1356aadf
+Owners = [0xead301dc6b949faf4a5c4a14174611574a884845
          ,0x004a7617b84d4ece1728ef7809bc844356a897ba
          ]
 

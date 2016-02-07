@@ -4,5 +4,5 @@ import Ethereum.IO
 import Bank
 
 main : IO ()
-main = runInit [MkS 10 0 0 0] deposit
+main = runInit [MkEth 10 0 0 0] deposit
 

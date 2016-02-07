@@ -1,7 +1,7 @@
 compile_io = idris -p effects -p contrib idris/$(1)_IO.idr -i ../idris-se/lib -i idris  -o dist/$(1) --no-partial-eval
-compile_sio = idris -p effects -p contrib idris/$(1)_SIO.idr -i ../idris-se/lib -i idris -o dist/$(1).se --no-partial-eval --total --codegen se
+compile_eio = idris -p effects -p contrib idris/$(1)_EIO.idr -i ../idris-se/lib -i idris -o dist/$(1).se --no-partial-eval --total --codegen se
 
-all: io sio
+all: io eio
 
 io:
 	$(call compile_io,Bank)
@@ -10,24 +10,30 @@ io:
 	$(call compile_io,Bank4)
 	$(call compile_io,RPS)
 
-sio:
-	$(call compile_sio,Bank)
-	$(call compile_sio,Bank2)
-	$(call compile_sio,Bank3)
-	$(call compile_sio,Bank4)
-	$(call compile_sio,RPS)
+eio:
+	$(call compile_eio,Bank)
+	$(call compile_eio,Bank2)
+	$(call compile_eio,Bank3)
+	$(call compile_eio,Bank4)
+	$(call compile_eio,RPS)
 
-bank_sio:
-	$(call compile_sio,Bank)
+mul_eio:
+	$(call compile_eio,Mul)
 
-bank2_sio:
-	$(call compile_sio,Bank2)
+bank_eio:
+	$(call compile_eio,Bank)
 
-bank3_sio:
-	$(call compile_sio,Bank3)
+bank2_eio:
+	$(call compile_eio,Bank2)
 
-rps_sio:
-	$(call compile_sio,RPS)
+bank3_eio:
+	$(call compile_eio,Bank3)
+
+rps_eio:
+	$(call compile_eio,RPS)
+
+namecoin_eio:
+	$(call compile_eio,Namecoin)
 
 bank_io:
 	$(call compile_io,Bank)
@@ -40,6 +46,9 @@ bank3_io:
 
 rps_io:
 	$(call compile_io,RPS)
+
+namecoin_io:
+	$(call compile_io,Namecoin)
 
 clean:
 	rm dist/*
