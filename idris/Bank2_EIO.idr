@@ -21,7 +21,7 @@ runWithdraw amount = case lte amount prim__selfbalance of
               else Nothing
   No _  => Nothing
 
-exports : FFI_Export FFI_Eth "defs.se" []
+exports : FFI_Export FFI_Eth "" []
 exports = Fun runDeposit "deposit" $
           Fun runWithdraw "withdraw" $
           End

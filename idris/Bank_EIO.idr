@@ -11,7 +11,5 @@ main : EIO ()
 main = return ()
 
 testList : FFI_Export FFI_Eth "testHdr.se" []
-testList = Data Nat "Nat" $
-           Data (Maybe ()) "M" $
-           Fun runDep "deposit" $
+testList = Fun runDep "deposit" $
            End

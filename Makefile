@@ -29,6 +29,9 @@ bank2_eio:
 bank3_eio:
 	$(call compile_eio,Bank3)
 
+bank4_eio:
+	$(call compile_eio,Bank4)
+
 rps_eio:
 	$(call compile_eio,RPS)
 
@@ -43,6 +46,9 @@ bank2_io:
 
 bank3_io:
 	$(call compile_io,Bank3)
+
+bank4_io:
+	$(call compile_io,Bank4)
 
 rps_io:
 	$(call compile_io,RPS)
