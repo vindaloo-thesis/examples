@@ -12,11 +12,10 @@ runWithdraw : Nat -> Maybe ()
 runWithdraw amount = case lte amount prim__selfbalance of
   Yes p => if prim__value == 0 
               then if prim__sender == Owner
-                      then do
-                        runInit
-                          [MkEth 0 prim__selfbalance 0 0, MkEnv prim__self Owner prim__origin]
-                          (withdraw amount {p})
-                        return ()
+                      then runInit
+                             [MkEth 0 prim__selfbalance 0 0
+                              ,MkEnv prim__self Owner prim__origin]
+                             (withdraw amount {p})
                       else Nothing
               else Nothing
   No _  => Nothing
