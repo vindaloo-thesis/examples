@@ -12,6 +12,6 @@ mulval : Int -> Eff Int
           [ETH v b 0 0]
           [ETH v b 0 v]
 mulval {v} a = do
-  save v
+  keep v
   return (a*v)
   -}

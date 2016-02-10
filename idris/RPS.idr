@@ -41,7 +41,7 @@ playerChoice {v} {s} move = do
       write players pc s
       write moves pc move
       write playerCount (pc+1)
-      save 10
+      keep 10
       send (v-10) s
       pureM True
     else do --If the game is full, return ether
