@@ -1,6 +1,6 @@
-Samle Idris Ethereum smart contracts
+Sample Idris Ethereum smart contracts
 ------------------------------------
-Sample contracts to show how to use [Idris](http://www.idris-lang.org/) as a smart contract language for the [Ethereum](https://ethereum.org/) platform.
+Example contracts to show how to use [Idris](http://www.idris-lang.org/) as a smart contract language for the [Ethereum](https://ethereum.org/) platform.
 
 
 Prerequisites
