@@ -3,26 +3,23 @@ module Transactions
 import Effects
 import Ethereum
 
-playerCount : Field
-playerCount = EInt "playerCount"
+playerCount : Field Int
+playerCount = MkField 0
 
-players : MapField
-players = EMIntAddress "players"
+players : Field Int Address
+players = MkField 1
 
-moves : MapField
-moves = EMIntInt "moves"
+moves : Field Int Int
+moves = MkField 2
 
 winner : Int -> Int -> Int
-winner 2 1 = 0
-winner 1 2 = 1
-
-winner 0 2 = 0
-winner 2 0 = 1
-
-winner 1 0 = 0
-winner 0 1 = 1
-
-winner _ _ = 2
+winner 2 1 = 0 -- Scissors beats paper.
+winner 1 2 = 1 -- Scissors beats paper.
+winner 0 2 = 0 -- Rock beats scissors.
+winner 2 0 = 1 -- Rock beats scissors.
+winner 1 0 = 0 -- Paper beats rock.
+winner 0 1 = 1 -- Paper beats rock.
+winner _ _ = 2 -- Draw
 
 init : Eff () [STORE]
 init = write playerCount 0
@@ -40,7 +37,7 @@ playerChoice {v} {s} move = do
    then do
       write players pc s
       write moves pc move
-      write playerCount (pc+1)
+      update playerCount (+ 1)
       keep 10
       send (v-10) s
       pureM True

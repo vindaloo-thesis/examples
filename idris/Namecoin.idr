@@ -2,8 +2,8 @@ module Namecoin
 
 import Ethereum
 
-db : MapField
-db = EMIntInt "db"
+db : MapField.Field Int Int
+db = MkField 1
 
 register : Int -> Int -> Eff () [STORE]
 register k v = write db k v
