@@ -5,7 +5,9 @@ import Ethereum.EIO
 import Namecoin
 
 runReg : Int -> Int -> Maybe ()
-runReg k v = runInit [()] (register k v)
+runReg k v = if prim__origin == Owner
+				then runInit [(), MkEnv prim__self prim__sender Owner] (register k v)
+				else Nothing
 
 runGet : Int -> Maybe Int
 runGet k = runInit [()] (get k)
