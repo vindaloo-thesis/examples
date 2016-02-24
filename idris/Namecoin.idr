@@ -14,6 +14,6 @@ register : Int -> Int -> EthereumEff (res : ())
   }
 register k v = write db k v
 
-get : Int -> EthereumEff (val : Int) {}
+get : Int -> EthereumEff (val : Int) { }
 get k = read db k
 
