@@ -14,7 +14,7 @@ runWithdraw amount = case lte amount prim__selfbalance of
               then if prim__sender == Owner
                       then runInit
                              [MkEth 0 prim__selfbalance 0 0
-                              ,MkEnv prim__self Owner prim__origin]
+                              ,MkEnv Owner prim__origin]
                              (withdraw amount {p})
                       else Nothing
               else Nothing
